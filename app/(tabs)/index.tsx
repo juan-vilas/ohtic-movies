@@ -90,7 +90,7 @@ export default function TabOneScreen() {
           </>
         ) : null}
 
-        <View style={{ height: 96 }}></View>
+        <View style={{ height: 96, backgroundColor: "transparent" }}></View>
       </ScrollView>
     </LinearGradient>
   );
