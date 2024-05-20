@@ -11,38 +11,11 @@ import { View } from "@/components/Themed";
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieShelf from "@/components/MovieShelf";
-
-export interface Root {
-  page: number;
-  results: Result[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface Result {
-  backdrop_path: string;
-  id: number;
-  original_title?: string;
-  overview: string;
-  poster_path: string;
-  media_type: string;
-  adult: boolean;
-  title?: string;
-  original_language: string;
-  genre_ids: number[];
-  popularity: number;
-  release_date?: string;
-  video?: boolean;
-  vote_average: number;
-  vote_count: number;
-  original_name?: string;
-  name?: string;
-  first_air_date?: string;
-  origin_country?: string[];
-}
+import { styles as tabStyles } from "@/app/(tabs)/_layout";
+import { Trending } from "@/shared/interfaces/trending";
 
 export default function TabOneScreen() {
-  const [trending, setTrending] = useState<Root>({
+  const [trending, setTrending] = useState<Trending>({
     page: 1,
     results: [],
     total_pages: 1,
@@ -66,7 +39,7 @@ export default function TabOneScreen() {
       options
     )
       .then((response) => response.json())
-      .then((response: Root) => {
+      .then((response: Trending) => {
         setTrending(response);
         console.log(response);
       })
@@ -76,14 +49,10 @@ export default function TabOneScreen() {
   return (
     <LinearGradient
       colors={["#262A32", "#171B20", "#0B0F14"]}
-      style={{
-        ...styles.background,
-        height: Dimensions.get("window").height,
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      }}
+      style={styles.background}
     >
       <ScrollView style={styles.container}>
-        <View style={{ height: 38, backgroundColor: "transparent" }}></View>
+        <View style={styles.marginTopView}></View>
         {trending.total_results > 0 ? (
           <>
             <MovieShelf data={trending.results}></MovieShelf>
@@ -92,7 +61,7 @@ export default function TabOneScreen() {
           </>
         ) : null}
 
-        <View style={{ height: 96, backgroundColor: "transparent" }}></View>
+        <View style={styles.marginBottomView}></View>
       </ScrollView>
     </LinearGradient>
   );
@@ -107,21 +76,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
+    height: Dimensions.get("window").height,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  marginTopView: { height: 38, backgroundColor: "transparent" },
+  marginBottomView: {
+    height: tabStyles.tabBarStyle.height + 38,
+    backgroundColor: "transparent",
   },
 });

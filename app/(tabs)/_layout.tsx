@@ -1,16 +1,12 @@
-import React, { ComponentProps, useState } from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Pressable, Text, StatusBar as SB } from "react-native";
-
-import Colors from "@/constants/Colors";
+import { Tabs } from "expo-router";
+import React, { ComponentProps } from "react";
+import { StyleSheet } from "react-native";
+import { View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
-import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { View } from "@/components/Themed";
-import * as Animatable from "react-native-animatable";
+import { StatusBar } from "expo-status-bar";
+import Colors from "@/shared/constants/Colors";
 
 function TabBarIcon({
   style,
@@ -28,50 +24,23 @@ export default function TabLayout() {
 
       <Tabs
         screenOptions={{
+          headerShown: true,
           tabBarShowLabel: false,
           tabBarActiveTintColor: "white", // Colors[colorScheme ?? "light"].tint,
-          headerShown: true,
           headerTitleAlign: "center",
           headerTitleStyle: { color: "#fff" },
           headerTransparent: true,
           headerLeft: () => (
-            <View
-              style={{
-                backgroundColor: "rgba(20, 24, 32, 0.90)",
-                borderColor: "#11141B",
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 100,
-                marginLeft: 18,
-              }}
-            >
+            <View style={styles.iconStyle}>
               <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
             </View>
           ),
           headerRight: () => (
-            <View
-              style={{
-                backgroundColor: "rgba(20, 24, 32, 0.90)",
-                borderColor: "#11141B",
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 100,
-                marginRight: 18,
-              }}
-            >
+            <View style={styles.iconStyle}>
               <TabBarIcon size={18} name={"settings-outline"} color={"#fff"} />
             </View>
           ),
-          tabBarStyle: {
-            backgroundColor: "rgba(10, 15, 20, 0.90)",
-            borderColor: "#1C1F25",
-            borderWidth: 1,
-            marginBottom: 18,
-            marginHorizontal: 18,
-            height: 62,
-            position: "absolute",
-            borderRadius: 100,
-          },
+          tabBarStyle: styles.tabBarStyle,
         }}
       >
         <Tabs.Screen
@@ -82,7 +51,7 @@ export default function TabLayout() {
               <TabBarIcon
                 size={24}
                 name={"search"}
-                color={focused ? color : "#707377"}
+                color={focused ? color : Colors.tabs.iconStyle.unfocusedColor}
               />
             ),
           }}
@@ -95,7 +64,7 @@ export default function TabLayout() {
               <TabBarIcon
                 size={24}
                 name={"bookmark-outline"}
-                color={focused ? color : "#707377"}
+                color={focused ? color : Colors.tabs.iconStyle.unfocusedColor}
               />
             ),
           }}
@@ -104,3 +73,24 @@ export default function TabLayout() {
     </>
   );
 }
+
+export const styles = StyleSheet.create({
+  tabBarStyle: {
+    backgroundColor: Colors.tabs.tabBarStyle.backgroundColor,
+    borderColor: Colors.tabs.tabBarStyle.borderColor,
+    borderWidth: 1,
+    marginBottom: 18,
+    marginHorizontal: 18,
+    height: 62,
+    position: "absolute",
+    borderRadius: 100,
+  },
+  iconStyle: {
+    backgroundColor: Colors.tabs.iconStyle.backgroundColor,
+    borderColor: Colors.tabs.iconStyle.borderColor,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 100,
+    marginHorizontal: 18,
+  },
+});
