@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  Image,
   Platform,
   ScrollView,
   StatusBar,

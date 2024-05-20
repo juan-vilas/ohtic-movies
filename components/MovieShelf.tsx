@@ -12,10 +12,10 @@ export default function MovieShelf({ data }: { data: any }) {
         contentContainerStyle={{ paddingLeft: 90 }}
         data={data}
         renderItem={({ item }: any) => {
-          console.log("http://image.tmdb.org/t/p/w300" + item.poster_path);
+          console.log("https://image.tmdb.org/t/p/w300" + item.poster_path);
           return (
             <Movie3DCover
-              image={"http://image.tmdb.org/t/p/w300" + item.poster_path}
+              image={"https://image.tmdb.org/t/p/w300" + item.poster_path}
               width={150}
               height={220}
             />
