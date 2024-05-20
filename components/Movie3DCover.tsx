@@ -64,7 +64,15 @@ const Movie3DCover = ({
   }, []);
 
   return !data.poster_path ? null : (
-    <View style={{ height, width, marginRight: 50, ...style }}>
+    <View
+      style={{
+        height,
+        width,
+        marginRight: 50,
+        transform: rotate ? [{ rotateZ: "5deg" }] : [],
+        ...style,
+      }}
+    >
       <Link
         href={{
           pathname: "/shows/[id]",
@@ -88,7 +96,7 @@ const Movie3DCover = ({
               fadeDuration={0}
               style={{
                 ...styles.image,
-                transform: [{ skewY: rotate ? "5deg" : "0deg" }],
+                transform: [{ skewY: "0deg" }],
                 width,
                 height,
               }}
@@ -111,19 +119,18 @@ const Movie3DCover = ({
                 borderBottomRightRadius: 5,
                 borderTopRightRadius: 5,
                 borderBottomWidth: height,
-                marginTop: rotate ? -5 : -2,
-                marginLeft: rotate ? -3 : -6,
+                marginTop: -2,
+                marginLeft: -6,
                 zIndex: -1,
                 transform: [
                   { perspective: 10 },
                   { rotateY: "5deg" },
-                  { skewY: rotate ? "5deg" : "0deg" },
-                  { scaleY: rotate ? 0.94 : 0.974 },
+                  { skewY: "0deg" },
+                  { scaleY: 0.974 },
                 ],
               }}
             >
-              <LinearGradient
-                // Background Linear Gradient
+              <LinearGradient // Background Linear Gradient
                 colors={[
                   colors[Platform.OS === "ios" ? "background" : "dominant"],
                   hexToRgba(

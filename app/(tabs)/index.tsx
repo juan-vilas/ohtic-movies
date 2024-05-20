@@ -23,14 +23,11 @@ export default function TabOneScreen() {
   });
 
   useEffect(() => {
-    const API_KEY =
-      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlOGI0N2E4YTllN2UwNTkwMjAwMWIyZTY2NThmN2YyYSIsInN1YiI6IjY2NDhiYzFlZTY4YjdjNjhjYjc4YmY0NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.00T7xQ3LPrwGFfCPPbWZmP05wYI55iZ9ruwhqlnCK_c";
-
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: "Bearer " + API_KEY,
+        Authorization: "Bearer " + process.env.EXPO_PUBLIC_API_KEY,
       },
     };
 
@@ -41,9 +38,7 @@ export default function TabOneScreen() {
       .then((response) => response.json())
       .then((response: Trending) => {
         setTrending(response);
-        console.log(response);
-      })
-      .catch((err) => console.error(err));
+      });
   }, []);
 
   return (
