@@ -14,14 +14,15 @@ import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
 import hexToRgba from "hex-to-rgba";
 import { Link, router } from "expo-router";
+import { Result, Trending } from "@/shared/interfaces/trending";
 
 interface Props {
-  image?: string;
   rotate?: boolean;
   height: number;
   width: number;
   animation?: boolean;
   style?: Object;
+  data: Result;
 }
 
 const fadeIn = {
@@ -34,12 +35,12 @@ const fadeIn = {
 };
 
 const Movie3DCover = ({
-  image,
   rotate = false,
   width,
   height,
   animation = true,
   style,
+  data,
 }: Props) => {
   const [colors, setColors] = useState<any>({
     dominant: "#000",
@@ -49,20 +50,28 @@ const Movie3DCover = ({
   const [colorsLoaded, setColorsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!image) return;
-    getColors(image).then((response) => {
-      setColors(response);
-      setColorsLoaded(true);
-    });
-    Image.prefetch(image).then((value) => setLoaded(value));
+    if (!data.poster_path) return;
+    getColors("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
+      (response) => {
+        setColors(response);
+        setColorsLoaded(true);
+      }
+    );
+    Image.prefetch("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
+      (value) => setLoaded(value)
+    );
   }, []);
 
-  return (
+  return !data.poster_path ? null : (
     <View style={{ height, width, marginRight: 50, ...style }}>
       <Link
         href={{
           pathname: "/shows/[id]",
-          params: { id: "bacon", image },
+          params: {
+            id: "bacon",
+            image: "https://image.tmdb.org/t/p/w300" + data.poster_path,
+            data: JSON.stringify(data),
+          },
         }}
       >
         {colorsLoaded && loaded ? (
@@ -71,7 +80,9 @@ const Movie3DCover = ({
             style={styles.container}
           >
             <Image
-              source={{ uri: image }}
+              source={{
+                uri: "https://image.tmdb.org/t/p/w300" + data.poster_path,
+              }}
               onLoad={() => setLoaded(true)}
               fadeDuration={0}
               style={{

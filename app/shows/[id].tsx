@@ -1,12 +1,22 @@
 import { View, Text, Image, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Movie3DCover from "@/components/Movie3DCover";
+import { Result } from "@/shared/interfaces/trending";
 
 export default function ShowPage() {
-  const { id, image } = useLocalSearchParams<{ id: string; image: string }>();
+  const [result, setResult] = useState<Result>();
+  const { id, image, data } = useLocalSearchParams<{
+    id: string;
+    image: string;
+    data: any;
+  }>();
 
-  return (
+  useEffect(() => {
+    setResult(JSON.parse(data));
+  }, []);
+
+  return !result ? null : (
     <View style={styles.container}>
       <View style={styles.cover}>
         <Image
@@ -15,23 +25,23 @@ export default function ShowPage() {
           blurRadius={10}
         />
         <Movie3DCover
+          data={result}
           animation={false}
           rotate
           width={150 * 1.3}
           height={220 * 1.3}
-          image={image}
         />
       </View>
 
       <View style={styles.detailsContainer}>
         <View style={{ ...styles.section, borderTopWidth: 0 }}>
           <View style={{}}>
-            <Text style={styles.title}>I Care a Lot</Text>
-            <Text style={styles.date}>19 February 2020</Text>
+            <Text style={styles.title}>{result.title}</Text>
+            <Text style={styles.date}>{result.release_date}</Text>
           </View>
           <View style={{}}>
             <Text style={styles.rate}>RATE</Text>
-            <Text style={styles.rate}>mind blowing</Text>
+            <Text style={styles.rate}>{result.vote_average.toFixed(2)}</Text>
           </View>
         </View>
         <View style={styles.section}>
