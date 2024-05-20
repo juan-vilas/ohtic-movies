@@ -9,6 +9,7 @@ import {
   Platform,
   StyleProp,
   ViewStyle,
+  Text,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
@@ -92,6 +93,15 @@ const Movie3DCover = ({
                 height,
               }}
             />
+            <View
+              style={{
+                position: "absolute",
+                left: 6,
+                bottom: 4,
+              }}
+            >
+              <Text>{data.vote_average.toFixed(2)}</Text>
+            </View>
             <View
               style={{
                 width: 16,

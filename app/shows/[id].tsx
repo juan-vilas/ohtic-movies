@@ -36,8 +36,10 @@ export default function ShowPage() {
       <View style={styles.detailsContainer}>
         <View style={{ ...styles.section, borderTopWidth: 0 }}>
           <View style={{}}>
-            <Text style={styles.title}>{result.title}</Text>
-            <Text style={styles.date}>{result.release_date}</Text>
+            <Text style={styles.title}>{result.title || result.name}</Text>
+            <Text style={styles.date}>
+              {result.release_date || result.first_air_date}
+            </Text>
           </View>
           <View style={{}}>
             <Text style={styles.rate}>RATE</Text>
