@@ -1,0 +1,70 @@
+import { FlashList } from "@shopify/flash-list";
+import React from "react";
+import { View } from "react-native";
+import Movie3DCover from "./Movie3DCover";
+
+export default function MovieShelf({ data }: { data: any }) {
+  return (
+    <View style={{ marginVertical: 32 }}>
+      <FlashList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingLeft: 90 }}
+        data={data}
+        renderItem={({ item }: any) => {
+          console.log("http://image.tmdb.org/t/p/w300" + item.poster_path);
+          return (
+            <Movie3DCover
+              image={"http://image.tmdb.org/t/p/w300" + item.poster_path}
+              width={150}
+              height={220}
+            />
+          );
+        }}
+        estimatedItemSize={220}
+      />
+
+      <View
+        style={{
+          height: 50,
+          width: "100%",
+          zIndex: -1,
+          position: "absolute",
+          bottom: -14,
+          left: 34,
+        }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <View
+            style={{
+              width: 0,
+              height: 0,
+              backgroundColor: "transparent",
+              borderStyle: "solid",
+              borderRightWidth: 50,
+              borderTopWidth: 50,
+              borderRightColor: "transparent",
+              borderTopColor: "#12151A",
+              transform: [{ rotate: "180deg" }],
+            }}
+          ></View>
+          <View
+            style={{
+              backgroundColor: "#12151A",
+              height: "100%",
+              width: "100%",
+            }}
+          ></View>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#1B1E24",
+            borderBottomLeftRadius: 10,
+            height: 20,
+            width: "100%",
+          }}
+        ></View>
+      </View>
+    </View>
+  );
+}
