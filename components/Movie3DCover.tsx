@@ -11,9 +11,10 @@ import {
 import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
 import hexToRgba from "hex-to-rgba";
+import { Link, router } from "expo-router";
 
 interface Props {
-  image: string;
+  image?: string;
   rotate?: boolean;
   height: number;
   width: number;
@@ -36,6 +37,7 @@ const Movie3DCover = ({ image, rotate = false, width, height }: Props) => {
   const [colorsLoaded, setColorsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!image) return;
     getColors(image).then((response) => {
       setColors(response);
       setColorsLoaded(true);
@@ -45,61 +47,72 @@ const Movie3DCover = ({ image, rotate = false, width, height }: Props) => {
 
   return (
     <View style={{ height, width, marginRight: 50 }}>
-      {colorsLoaded && loaded ? (
-        <Animatable.View animation={fadeIn} style={styles.container}>
-          <Image
-            source={{ uri: image }}
-            onLoad={() => setLoaded(true)}
-            fadeDuration={0}
-            style={{
-              ...styles.image,
-              transform: [{ skewY: rotate ? "5deg" : "0deg" }],
-              width,
-              height,
-            }}
-          />
-          <View
-            style={{
-              width: 16,
-              height: 0,
-              borderBottomEndRadius: 5,
-              borderTopEndRadius: 5,
-              borderBottomWidth: height,
-              marginTop: rotate ? 10.5 : -2,
-              marginLeft: -6,
-              zIndex: -1,
-              transform: [
-                { perspective: 10 },
-                { rotateY: "5deg" },
-                { skewY: rotate ? "5deg" : "0deg" },
-                { scaleY: 0.974 },
-              ],
-            }}
-          >
-            <LinearGradient
-              // Background Linear Gradient
-              colors={[
-                colors[Platform.OS === "ios" ? "background" : "dominant"],
-                hexToRgba(
-                  colors[Platform.OS === "ios" ? "background" : "dominant"],
-                  0.4
-                ),
-              ]}
+      <Link
+        href={{
+          pathname: "/shows/[id]",
+          params: { id: "bacon", image },
+        }}
+      >
+        {colorsLoaded && loaded ? (
+          <Animatable.View animation={fadeIn} style={styles.container}>
+            <Image
+              source={{ uri: image }}
+              onLoad={() => setLoaded(true)}
+              fadeDuration={0}
               style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                top: 0,
+                ...styles.image,
+                transform: [{ skewY: rotate ? "5deg" : "0deg" }],
+                width,
                 height,
-                borderTopRightRadius: 5,
-                borderBottomRightRadius: 5,
               }}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
             />
-          </View>
-        </Animatable.View>
-      ) : null}
+            <View
+              style={{
+                width: 16,
+                height: 0,
+                borderBottomLeftRadius: 4,
+                borderTopLeftRadius: 4,
+                borderBottomRightRadius: 5,
+                borderTopRightRadius: 5,
+                borderBottomWidth: height,
+                marginTop: rotate ? -5 : -2,
+                marginLeft: rotate ? -3 : -6,
+                zIndex: -1,
+                transform: [
+                  { perspective: 10 },
+                  { rotateY: "5deg" },
+                  { skewY: rotate ? "5deg" : "0deg" },
+                  { scaleY: rotate ? 0.94 : 0.974 },
+                ],
+              }}
+            >
+              <LinearGradient
+                // Background Linear Gradient
+                colors={[
+                  colors[Platform.OS === "ios" ? "background" : "dominant"],
+                  hexToRgba(
+                    colors[Platform.OS === "ios" ? "background" : "dominant"],
+                    0.4
+                  ),
+                ]}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  height,
+                  borderBottomLeftRadius: 4,
+                  borderTopLeftRadius: 4,
+                  borderTopRightRadius: 5,
+                  borderBottomRightRadius: 5,
+                }}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+              />
+            </View>
+          </Animatable.View>
+        ) : null}
+      </Link>
     </View>
   );
 };
