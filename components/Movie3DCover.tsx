@@ -7,6 +7,8 @@ import {
   Animated,
   Easing,
   Platform,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
@@ -19,7 +21,9 @@ interface Props {
   height: number;
   width: number;
   animation?: boolean;
+  style?: Object;
 }
+
 const fadeIn = {
   from: {
     opacity: 0,
@@ -35,6 +39,7 @@ const Movie3DCover = ({
   width,
   height,
   animation = true,
+  style,
 }: Props) => {
   const [colors, setColors] = useState<any>({
     dominant: "#000",
@@ -53,7 +58,7 @@ const Movie3DCover = ({
   }, []);
 
   return (
-    <View style={{ height, width, marginRight: 50 }}>
+    <View style={{ height, width, marginRight: 50, ...style }}>
       <Link
         href={{
           pathname: "/shows/[id]",

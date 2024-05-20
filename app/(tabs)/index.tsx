@@ -83,6 +83,7 @@ export default function TabOneScreen() {
       }}
     >
       <ScrollView style={styles.container}>
+        <View style={{ height: 38, backgroundColor: "transparent" }}></View>
         {trending.total_results > 0 ? (
           <>
             <MovieShelf data={trending.results}></MovieShelf>

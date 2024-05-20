@@ -7,31 +7,41 @@ export default function ShowPage() {
   const { id, image } = useLocalSearchParams<{ id: string; image: string }>();
 
   return (
-    <View style={{}}>
-      <Image
-        source={{ uri: image }}
-        fadeDuration={0}
+    <View style={{ flex: 1 }}>
+      <View
         style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "70%",
         }}
-        blurRadius={10}
-      />
-      <Movie3DCover
-        animation={false}
-        rotate
-        width={150}
-        height={220}
-        image={image}
-      />
-      <Movie3DCover
-        animation={false}
-        rotate
-        width={150}
-        height={220}
-        image={image}
-      />
+      >
+        <Image
+          source={{ uri: image }}
+          fadeDuration={0}
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+          }}
+          blurRadius={10}
+        />
+        <Movie3DCover
+          animation={false}
+          rotate
+          width={150 * 1.3}
+          height={220 * 1.3}
+          image={image}
+        />
+      </View>
+
+      <View>
+        <Text>I care a lot</Text>
+        <Text>19 fev 2020</Text>
+        <Text>mind blowing</Text>
+        <Text>add to watchlist</Text>
+        <Text>add to library</Text>
+        <Text>watch online</Text>
+      </View>
     </View>
   );
 }
