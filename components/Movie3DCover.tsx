@@ -18,6 +18,7 @@ interface Props {
   rotate?: boolean;
   height: number;
   width: number;
+  animation?: boolean;
 }
 const fadeIn = {
   from: {
@@ -28,7 +29,13 @@ const fadeIn = {
   },
 };
 
-const Movie3DCover = ({ image, rotate = false, width, height }: Props) => {
+const Movie3DCover = ({
+  image,
+  rotate = false,
+  width,
+  height,
+  animation = true,
+}: Props) => {
   const [colors, setColors] = useState<any>({
     dominant: "#000",
     background: "#000",
@@ -54,7 +61,10 @@ const Movie3DCover = ({ image, rotate = false, width, height }: Props) => {
         }}
       >
         {colorsLoaded && loaded ? (
-          <Animatable.View animation={fadeIn} style={styles.container}>
+          <Animatable.View
+            animation={animation ? fadeIn : undefined}
+            style={styles.container}
+          >
             <Image
               source={{ uri: image }}
               onLoad={() => setLoaded(true)}

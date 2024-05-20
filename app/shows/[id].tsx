@@ -18,8 +18,20 @@ export default function ShowPage() {
         }}
         blurRadius={10}
       />
-      <Movie3DCover rotate width={150} height={220} image={image} />
-      <Movie3DCover rotate width={150} height={220} image={image} />
+      <Movie3DCover
+        animation={false}
+        rotate
+        width={150}
+        height={220}
+        image={image}
+      />
+      <Movie3DCover
+        animation={false}
+        rotate
+        width={150}
+        height={220}
+        image={image}
+      />
     </View>
   );
 }
