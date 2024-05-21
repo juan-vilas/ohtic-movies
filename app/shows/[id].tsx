@@ -44,6 +44,7 @@ export default function ShowPage() {
           rotate
           width={150 * 1.5}
           height={220 * 1.5}
+          style={{ marginVertical: 56, marginTop: 86 }}
         />
       </View>
 
