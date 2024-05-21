@@ -15,6 +15,8 @@ import { Pressable, StatusBar, StyleSheet, View } from "react-native";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/shared/constants/Colors";
+import { Provider } from "react-redux";
+import { store } from "@/shared/redux/store";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,29 +66,31 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        <Stack.Screen
-          name="shows/[id]"
-          options={{
-            presentation: "modal",
-            headerShown: true,
-            headerTransparent: true,
-            title: "",
-            headerLeft: () => (
-              <Pressable
-                style={{ ...styles.iconStyle, marginHorizontal: 0 }}
-                onPress={() => router.back()}
-              >
-                <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-              </Pressable>
-            ),
-          }}
-        />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="shows/[id]"
+            options={{
+              presentation: "modal",
+              headerShown: true,
+              headerTransparent: true,
+              title: "",
+              headerLeft: () => (
+                <Pressable
+                  style={{ ...styles.iconStyle, marginHorizontal: 0 }}
+                  onPress={() => router.back()}
+                >
+                  <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
+                </Pressable>
+              ),
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

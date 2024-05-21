@@ -1,23 +1,35 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Movie3DCover from "@/components/Movie3DCover";
 import { Result } from "@/shared/interfaces/trending";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { Videos } from "@/shared/interfaces/videos";
+import { getVideos } from "@/shared/apis/MovieAPI";
 
 export default function ShowPage() {
   const [result, setResult] = useState<Result>();
-  const { id, image, data } = useLocalSearchParams<{
-    id: string;
-    image: string;
-    data: any;
-  }>();
+  const [trailerId, setTrailerId] = useState<string>();
+  const { id, data } = useLocalSearchParams<{ id: string; data: any }>();
 
   useEffect(() => {
     setResult(JSON.parse(data));
   }, []);
 
+  useEffect(() => {
+    if (!result?.id) return;
+    getVideos(result.id).then((response) => {
+      if (
+        response.results?.length > 0 &&
+        response.results[0].site === "YouTube"
+      ) {
+        setTrailerId(response.results[0].key);
+      }
+    });
+  }, [result]);
+
   return !result ? null : (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.cover}>
         <Image
           source={{
@@ -44,6 +56,7 @@ export default function ShowPage() {
                 .toDateString()
                 .substring(4)}
             </Text>
+            <Text style={styles.date}>{result.overview}</Text>
           </View>
         </View>
         <View style={styles.section}>
@@ -53,14 +66,32 @@ export default function ShowPage() {
         <View style={styles.section}>
           <Text style={styles.title}>Watch Online</Text>
         </View>
+        {trailerId ? (
+          <>
+            <View style={styles.section}>
+              <Text style={styles.title}>Trailer</Text>
+            </View>
+            <YoutubePlayer
+              webViewStyle={{}}
+              webViewProps={{
+                containerStyle: {
+                  borderRadius: 14,
+                },
+              }}
+              height={200}
+              videoId={trailerId}
+            />
+          </>
+        ) : null}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#14181F",
   },
   cover: {
     flex: 1,
@@ -73,7 +104,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: "#14181F",
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingVertical: 24,
   },
   detailsText: { color: "white" },
   section: {

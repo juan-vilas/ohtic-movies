@@ -13,32 +13,26 @@ import { LinearGradient } from "expo-linear-gradient";
 import MovieShelf from "@/components/MovieShelf";
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
 import { Trending } from "@/shared/interfaces/trending";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/shared/redux/store";
+import * as movieAPI from "@/shared/apis/MovieAPI";
+import { getTrendingMovies } from "@/shared/redux/trendingMovies";
+import { getTrendingTV } from "@/shared/redux/trendingTV";
 
 export default function TabOneScreen() {
-  const [trending, setTrending] = useState<Trending>({
-    page: 1,
-    results: [],
-    total_pages: 1,
-    total_results: 0,
-  });
+  const trendingMovies = useSelector(
+    (state: RootState) => state.trendingMovies
+  );
+  const trendingTV = useSelector((state: RootState) => state.trendingTV);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: "Bearer " + process.env.EXPO_PUBLIC_API_KEY,
-      },
-    };
-
-    fetch(
-      "https://api.themoviedb.org/3/trending/all/day?language=en-US",
-      options
-    )
-      .then((response) => response.json())
-      .then((response: Trending) => {
-        setTrending(response);
-      });
+    movieAPI.getTrendingMovies().then((response) => {
+      dispatch(getTrendingMovies(response));
+    });
+    movieAPI.getTrendingTV().then((response) => {
+      dispatch(getTrendingTV(response));
+    });
   }, []);
 
   return (
@@ -48,11 +42,10 @@ export default function TabOneScreen() {
     >
       <ScrollView style={styles.container}>
         <View style={styles.marginTopView}></View>
-        {trending.total_results > 0 ? (
+        {trendingMovies.total_results > 0 ? (
           <>
-            <MovieShelf data={trending.results}></MovieShelf>
-            <MovieShelf data={[...trending.results].reverse()}></MovieShelf>
-            <MovieShelf data={trending.results}></MovieShelf>
+            <MovieShelf data={trendingMovies.results}></MovieShelf>
+            <MovieShelf data={trendingTV.results}></MovieShelf>
           </>
         ) : null}
 
