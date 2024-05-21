@@ -10,16 +10,20 @@ const initialState: Trending = {
 };
 
 export const trendingSlice = createSlice({
-  name: "trendingMovies",
+  name: "trendingAll",
   initialState,
   reducers: {
-    getTrendingMovies: (state, action) => {
-      return action.payload;
+    getTrendingAll: (state, action: { payload: Trending }) => {
+      const newState = action.payload;
+      newState.results = newState.results.filter(
+        (el) => el.media_type !== "person"
+      );
+      return newState;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { getTrendingMovies } = trendingSlice.actions;
+export const { getTrendingAll } = trendingSlice.actions;
 
 export default trendingSlice.reducer;

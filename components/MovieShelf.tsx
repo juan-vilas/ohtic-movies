@@ -3,7 +3,13 @@ import React from "react";
 import { View } from "react-native";
 import Movie3DCover from "./Movie3DCover";
 
-export default function MovieShelf({ data }: { data: any }) {
+export default function MovieShelf({
+  data,
+  extraData,
+}: {
+  data: any;
+  extraData: any;
+}) {
   return (
     <View style={{ marginVertical: 32 }}>
       <FlashList
@@ -11,6 +17,7 @@ export default function MovieShelf({ data }: { data: any }) {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingLeft: 90 }}
         data={data}
+        extraData={extraData}
         renderItem={({ item }: any) => {
           return (
             <Movie3DCover

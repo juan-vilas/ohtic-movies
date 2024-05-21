@@ -11,7 +11,7 @@ export interface Result {
   original_title?: string;
   overview: string;
   poster_path: string;
-  media_type: string;
+  media_type: "person" | "movie" | "tv";
   adult: boolean;
   title?: string;
   original_language: string;
