@@ -114,27 +114,29 @@ const Movie3DCover = ({
               </Text>
             </View>
 
-            <View
-              style={{
-                ...styles.threeDGradientEffect,
-                borderBottomWidth: height,
-                transform: [
-                  { perspective: 10 },
-                  { rotateY: "5deg" },
-                  { skewY: "0deg" },
-                  { scaleY: rotate ? 0.95 : 0.974 },
-                ],
-              }}
-            >
-              <LinearGradient // Background Linear Gradient
-                colors={[dominantColor, hexToRgba(dominantColor, 0.4)]}
+            <View style={{ marginLeft: -2 }}>
+              <View
                 style={{
-                  ...styles.threeDGradientEffectBackground,
-                  height,
+                  ...styles.threeDGradientEffect,
+                  borderBottomWidth: height,
+                  transform: [
+                    { perspective: 10 },
+                    { rotateY: "5deg" },
+                    { skewY: "0deg" },
+                    { scaleY: 0.95 },
+                  ],
                 }}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-              />
+              >
+                <LinearGradient // Background Linear Gradient
+                  colors={[dominantColor, hexToRgba(dominantColor, 0.4)]}
+                  style={{
+                    ...styles.threeDGradientEffectBackground,
+                    height,
+                  }}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
+                />
+              </View>
             </View>
           </Animatable.View>
         ) : null}
@@ -174,14 +176,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
   },
   threeDGradientEffect: {
-    width: 16,
+    width: 12,
     height: 0,
     borderBottomLeftRadius: 4,
     borderTopLeftRadius: 4,
     borderBottomRightRadius: 5,
     borderTopRightRadius: 5,
-    marginTop: -2,
-    marginLeft: -6,
     zIndex: -1,
   },
 
