@@ -1,6 +1,6 @@
-import { Tabs } from "expo-router";
+import { Link, Tabs, router } from "expo-router";
 import React, { ComponentProps } from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,9 +31,9 @@ export default function TabLayout() {
           headerTitleStyle: { color: "#fff" },
           headerTransparent: true,
           headerLeft: () => (
-            <View style={styles.iconStyle}>
+            <Pressable style={styles.iconStyle} onPress={() => router.back()}>
               <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-            </View>
+            </Pressable>
           ),
           headerRight: () => (
             <View style={styles.iconStyle}>
@@ -46,6 +46,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
+            headerLeft: () => null,
             title: "Ohtic!",
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
