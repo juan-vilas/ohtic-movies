@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieShelf from "@/components/MovieShelf";
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
-import { Result, Trending } from "@/shared/interfaces/trending";
+import { Result, Trending, TrendingState } from "@/shared/interfaces/trending";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/shared/redux/store";
 import * as movieAPI from "@/shared/apis/MovieAPI";
@@ -22,6 +22,7 @@ import { getTrendingTV } from "@/shared/redux/trendingTV";
 import { getTrendingAll } from "@/shared/redux/trendingAll";
 import Button from "@/components/Button";
 import Movie3DCover from "@/components/Movie3DCover";
+import { FlashList } from "@shopify/flash-list";
 
 type Filter = "all" | "movies" | "tv";
 
@@ -34,95 +35,117 @@ export default function TabOneScreen() {
   const dispatch = useDispatch();
 
   const [refresh, setRefresh] = useState(true);
-  const [trending, setTrending] = useState<Trending>({
+  const [trending, setTrending] = useState<TrendingState>({
     page: 1,
     results: [],
     total_pages: 0,
     total_results: 0,
   });
   const [filter, setFilter] = useState<Filter>("all");
+  const [pages, setPages] = useState<number>(1);
 
   useEffect(() => {
-    if (filter === "movies") {
-      if (trendingMovies.results.length === 0) {
-        movieAPI.getTrendingMovies().then((response) => {
-          dispatch(getTrendingMovies(response));
-          setTrending(response);
-        });
-      } else {
-        setTrending(trendingMovies);
-      }
-    }
-    if (filter === "tv") {
-      if (trendingTV.results.length === 0) {
-        movieAPI.getTrendingTV().then((response) => {
-          dispatch(getTrendingTV(response));
-          setTrending(response);
-        });
-      } else {
-        setTrending(trendingTV);
-      }
-    }
+    // if (filter === "movies") {
+    //   if (trendingMovies.results.length === 0) {
+    //     movieAPI.getTrendingMovies(pages).then((response) => {
+    //       dispatch(getTrendingMovies(response));
+    //       setTrending(response);
+    //     });
+    //   } else {
+    //     setTrending(trendingMovies);
+    //   }
+    // }
+    // if (filter === "tv") {
+    //   if (trendingTV.results.length === 0) {
+    //     movieAPI.getTrendingTV(pages).then((response) => {
+    //       dispatch(getTrendingTV(response));
+    //       setTrending(response);
+    //     });
+    //   } else {
+    //     setTrending(trendingTV);
+    //   }
+    // }
     if (filter === "all") {
-      if (trendingAll.results.length === 0) {
-        movieAPI.getTrendingAll().then((response) => {
+      const min = Math.min(trendingAll.total_pages, trendingAll.page + 3);
+      for (var i = trendingAll.page + 1; i <= min; i++) {
+        console.log(i, min);
+        movieAPI.getTrendingAll(i).then((response) => {
           dispatch(getTrendingAll(response));
-          setTrending(response);
         });
-      } else {
-        setTrending(trendingAll);
       }
     }
-  }, [filter]);
+  }, [pages, filter]);
 
   useEffect(() => {
     setRefresh(!refresh);
   }, [trending]);
+
+  useEffect(() => {
+    setTrending(trendingAll);
+  }, [trendingAll]);
+
+  useEffect(() => {
+    console.log("new page", pages);
+
+    setRefresh(!refresh);
+  }, [pages]);
 
   return (
     <LinearGradient
       colors={["#262A32", "#171B20", "#0B0F14"]}
       style={styles.background}
     >
-      <ScrollView style={styles.container}>
-        <View style={styles.marginTopView}></View>
+      <FlashList
+        data={[0]}
+        onEndReachedThreshold={0.5}
+        estimatedItemSize={716}
+        onEndReached={() => setPages(pages + 1)}
+        renderItem={() => {
+          return (
+            <>
+              <View style={styles.marginTopView}></View>
+              <View
+                style={{
+                  backgroundColor: "#14171D",
+                  borderRadius: 100,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginHorizontal: 46,
+                  padding: 8,
+                }}
+              >
+                <Button
+                  onPress={() => setFilter("all")}
+                  selected={filter === "all"}
+                >
+                  All
+                </Button>
+                <Button
+                  onPress={() => setFilter("movies")}
+                  selected={filter === "movies"}
+                >
+                  Movies
+                </Button>
+                <Button
+                  onPress={() => setFilter("tv")}
+                  selected={filter === "tv"}
+                >
+                  TV
+                </Button>
+              </View>
+              {trending.total_results > 0
+                ? trending.results.map((item, index) => {
+                    return <MovieShelf extraData={refresh} data={item} />;
+                  })
+                : null}
 
-        <View
-          style={{
-            backgroundColor: "#14171D",
-            borderRadius: 100,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginHorizontal: 46,
-            padding: 8,
-          }}
-        >
-          <Button onPress={() => setFilter("all")} selected={filter === "all"}>
-            All
-          </Button>
-          <Button
-            onPress={() => setFilter("movies")}
-            selected={filter === "movies"}
-          >
-            Movies
-          </Button>
-          <Button onPress={() => setFilter("tv")} selected={filter === "tv"}>
-            TV
-          </Button>
-        </View>
-
-        {trending.total_results > 0 ? (
-          <>
-            <MovieShelf
-              extraData={refresh}
-              data={trending.results}
-            ></MovieShelf>
-          </>
-        ) : null}
-
-        <View style={styles.marginBottomView}></View>
-      </ScrollView>
+              <View style={styles.marginBottomView}></View>
+            </>
+          );
+        }}
+        style={styles.container}
+      />
     </LinearGradient>
   );
 }

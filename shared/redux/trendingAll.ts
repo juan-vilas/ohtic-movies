@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Trending } from "../interfaces/trending";
+import { Trending, TrendingState } from "../interfaces/trending";
 
-const initialState: Trending = {
+const initialState: TrendingState = {
   page: 1,
   results: [],
-  total_pages: 0,
+  total_pages: 10,
   total_results: 0,
 };
 
@@ -14,11 +14,13 @@ export const trendingSlice = createSlice({
   initialState,
   reducers: {
     getTrendingAll: (state, action: { payload: Trending }) => {
-      const newState = action.payload;
-      newState.results = newState.results.filter(
-        (el) => el.media_type !== "person"
+      state.page = action.payload.page;
+      state.total_pages = action.payload.total_pages;
+      state.total_results = action.payload.total_results;
+      state.results.push(
+        action.payload.results.filter((el) => el.media_type !== "person")
       );
-      return newState;
+      return state;
     },
   },
 });

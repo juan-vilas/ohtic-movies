@@ -1,3 +1,10 @@
+export interface TrendingState {
+  page: number;
+  results: Result[][];
+  total_pages: number;
+  total_results: number;
+}
+
 export interface Trending {
   page: number;
   results: Result[];

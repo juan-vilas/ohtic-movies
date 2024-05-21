@@ -9,27 +9,27 @@ const options = {
   },
 };
 
-export const getTrendingAll = async (): Promise<Trending> => {
+export const getTrendingAll = async (page: number): Promise<Trending> => {
   const response = await fetch(
-    "https://api.themoviedb.org/3/trending/all/day?language=en-US",
+    `https://api.themoviedb.org/3/trending/all/day?page=${page}&language=en-US`,
     options
   );
   const json = await response.json();
   return json;
 };
 
-export const getTrendingTV = async (): Promise<Trending> => {
+export const getTrendingTV = async (page: number): Promise<Trending> => {
   const response = await fetch(
-    "https://api.themoviedb.org/3/trending/tv/day?language=en-US",
+    `https://api.themoviedb.org/3/trending/tv/day?page=${page}&language=en-US`,
     options
   );
   const json = await response.json();
   return json;
 };
 
-export const getTrendingMovies = async (): Promise<Trending> => {
+export const getTrendingMovies = async (page: number): Promise<Trending> => {
   const response = await fetch(
-    "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
+    `https://api.themoviedb.org/3/trending/movie/day?page=${page}&language=en-US`,
     options
   );
   const json = await response.json();
@@ -38,7 +38,7 @@ export const getTrendingMovies = async (): Promise<Trending> => {
 
 export const getVideos = async (movieId: number): Promise<Videos> => {
   const response = await fetch(
-    "https://api.themoviedb.org/3/movie/" + movieId + "/videos?language=en-US",
+    "https://api.themoviedb.org/3/movie/" + movieId + `/videos?language=en-US`,
     options
   );
   const json = await response.json();
