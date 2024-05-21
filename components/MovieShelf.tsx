@@ -12,7 +12,14 @@ export default function MovieShelf({ data }: { data: any }) {
         contentContainerStyle={{ paddingLeft: 90 }}
         data={data}
         renderItem={({ item }: any) => {
-          return <Movie3DCover data={item} width={150} height={220} />;
+          return (
+            <Movie3DCover
+              data={item}
+              width={150}
+              height={220}
+              style={{ marginRight: 50 }}
+            />
+          );
         }}
         estimatedItemSize={220}
       />

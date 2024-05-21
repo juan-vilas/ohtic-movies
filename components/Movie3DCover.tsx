@@ -16,6 +16,7 @@ import { getColors } from "react-native-image-colors";
 import hexToRgba from "hex-to-rgba";
 import { Link, router } from "expo-router";
 import { Result, Trending } from "@/shared/interfaces/trending";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   rotate?: boolean;
@@ -43,10 +44,7 @@ const Movie3DCover = ({
   style,
   data,
 }: Props) => {
-  const [colors, setColors] = useState<any>({
-    dominant: "#000",
-    background: "#000",
-  });
+  const [dominantColor, setColors] = useState<string>("#000");
   const [loaded, setLoaded] = useState<boolean>(false);
   const [colorsLoaded, setColorsLoaded] = useState<boolean>(false);
 
@@ -54,7 +52,11 @@ const Movie3DCover = ({
     if (!data.poster_path) return;
     getColors("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
       (response) => {
-        setColors(response);
+        if (response["platform"] === "android" && Platform.OS === "android") {
+          setColors(response.dominant);
+        } else if (response["platform"] === "ios" && Platform.OS === "ios") {
+          setColors(response.background);
+        }
         setColorsLoaded(true);
       }
     );
@@ -68,7 +70,6 @@ const Movie3DCover = ({
       style={{
         height,
         width,
-        marginRight: 50,
         transform: rotate ? [{ rotateZ: "5deg" }] : [],
         ...style,
       }}
@@ -78,7 +79,6 @@ const Movie3DCover = ({
           pathname: "/shows/[id]",
           params: {
             id: "bacon",
-            image: "https://image.tmdb.org/t/p/w300" + data.poster_path,
             data: JSON.stringify(data),
           },
         }}
@@ -101,53 +101,36 @@ const Movie3DCover = ({
                 height,
               }}
             />
-            <View
-              style={{
-                position: "absolute",
-                left: 6,
-                bottom: 4,
-              }}
-            >
-              <Text>{data.vote_average.toFixed(2)}</Text>
+
+            <View style={styles.rating}>
+              <LinearGradient // Background Linear Gradient
+                colors={["rgba(255,255,255,0)", "rgba(0,0,0,1)"]}
+                style={{ ...styles.ratingGradient, width }}
+                start={{ x: 0.5, y: 0 }}
+              ></LinearGradient>
+              <Ionicons name="star" color={"gold"} size={14}></Ionicons>
+              <Text style={{ color: "white" }}>
+                {data.vote_average.toFixed(2)}
+              </Text>
             </View>
+
             <View
               style={{
-                width: 16,
-                height: 0,
-                borderBottomLeftRadius: 4,
-                borderTopLeftRadius: 4,
-                borderBottomRightRadius: 5,
-                borderTopRightRadius: 5,
+                ...styles.threeDGradientEffect,
                 borderBottomWidth: height,
-                marginTop: -2,
-                marginLeft: -6,
-                zIndex: -1,
                 transform: [
                   { perspective: 10 },
                   { rotateY: "5deg" },
                   { skewY: "0deg" },
-                  { scaleY: 0.974 },
+                  { scaleY: rotate ? 0.95 : 0.974 },
                 ],
               }}
             >
               <LinearGradient // Background Linear Gradient
-                colors={[
-                  colors[Platform.OS === "ios" ? "background" : "dominant"],
-                  hexToRgba(
-                    colors[Platform.OS === "ios" ? "background" : "dominant"],
-                    0.4
-                  ),
-                ]}
+                colors={[dominantColor, hexToRgba(dominantColor, 0.4)]}
                 style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
+                  ...styles.threeDGradientEffectBackground,
                   height,
-                  borderBottomLeftRadius: 4,
-                  borderTopLeftRadius: 4,
-                  borderTopRightRadius: 5,
-                  borderBottomRightRadius: 5,
                 }}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
@@ -170,6 +153,47 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: "cover",
     borderRadius: 5,
+  },
+  rating: {
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    paddingLeft: 8,
+    paddingBottom: 4,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 4,
+  },
+  ratingGradient: {
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    height: "100%",
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+  },
+  threeDGradientEffect: {
+    width: 16,
+    height: 0,
+    borderBottomLeftRadius: 4,
+    borderTopLeftRadius: 4,
+    borderBottomRightRadius: 5,
+    borderTopRightRadius: 5,
+    marginTop: -2,
+    marginLeft: -6,
+    zIndex: -1,
+  },
+
+  threeDGradientEffectBackground: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    borderBottomLeftRadius: 4,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
 });
 

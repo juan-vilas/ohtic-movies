@@ -20,7 +20,9 @@ export default function ShowPage() {
     <View style={styles.container}>
       <View style={styles.cover}>
         <Image
-          source={{ uri: image }}
+          source={{
+            uri: "https://image.tmdb.org/t/p/w300" + result.poster_path,
+          }}
           style={styles.background}
           blurRadius={10}
         />
@@ -28,8 +30,8 @@ export default function ShowPage() {
           data={result}
           animation={false}
           rotate
-          width={150 * 1.3}
-          height={220 * 1.3}
+          width={150 * 1.5}
+          height={220 * 1.5}
         />
       </View>
 
@@ -38,12 +40,10 @@ export default function ShowPage() {
           <View style={{}}>
             <Text style={styles.title}>{result.title || result.name}</Text>
             <Text style={styles.date}>
-              {result.release_date || result.first_air_date}
+              {new Date(result.release_date || result.first_air_date || "")
+                .toDateString()
+                .substring(4)}
             </Text>
-          </View>
-          <View style={{}}>
-            <Text style={styles.rate}>RATE</Text>
-            <Text style={styles.rate}>{result.vote_average.toFixed(2)}</Text>
           </View>
         </View>
         <View style={styles.section}>
