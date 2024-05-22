@@ -10,6 +10,7 @@ import { store } from "@/shared/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { Pressable, StyleSheet } from "react-native";
+import { View } from "react-native-animatable";
 import { Provider } from "react-redux";
 
 export {
@@ -59,27 +60,29 @@ function TabBarIcon({
 function RootLayoutNav() {
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        <Stack.Screen
-          name="shows/[id]"
-          options={{
-            presentation: "modal",
-            headerShown: true,
-            headerTransparent: true,
-            title: "",
-            headerLeft: () => (
-              <Pressable
-                style={{ ...styles.iconStyle, marginHorizontal: 0 }}
-                onPress={() => router.back()}
-              >
-                <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-              </Pressable>
-            ),
-          }}
-        />
-      </Stack>
+      <View style={{ backgroundColor: "black", flex: 1 }}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="shows/[id]"
+            options={{
+              presentation: "modal",
+              headerShown: true,
+              headerTransparent: true,
+              title: "",
+              headerLeft: () => (
+                <Pressable
+                  style={{ ...styles.iconStyle, marginHorizontal: 0 }}
+                  onPress={() => router.back()}
+                >
+                  <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
+                </Pressable>
+              ),
+            }}
+          />
+        </Stack>
+      </View>
     </Provider>
   );
 }
