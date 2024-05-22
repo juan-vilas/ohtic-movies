@@ -75,8 +75,8 @@ export default function TabOneScreen() {
     // }
     if (filter === "all") {
       (async () => {
-        const min = Math.min(trendingAll.total_pages, trendingAll.page + 3);
-        for (var i = pages === 1 ? 1 : trendingAll.page + 1; i <= min; i++) {
+        const min = Math.min(trendingAll.total_pages, trendingAll.page + 3); // Fetches 3 pages
+        for (var i = trendingAll.page + 1; i <= min; i++) {
           const response = await movieAPI.getTrendingAll(i);
           dispatch(getTrendingAll(response));
         }
