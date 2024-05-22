@@ -1,32 +1,41 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Dimensions,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import Movie3DCover from "@/components/Movie3DCover";
-import { MovieData } from "@/shared/interfaces/trending";
-import YoutubePlayer from "react-native-youtube-iframe";
-import { Videos } from "@/shared/interfaces/videos";
-import { getVideos } from "@/shared/apis/MovieAPI";
 import Button from "@/components/Button";
+import Movie3DCover from "@/components/Movie3DCover";
+import { getVideos } from "@/shared/apis/MovieAPI";
+import CoverURL from "@/shared/constants/CoverURL";
+import { MovieData } from "@/shared/interfaces/trending";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function ShowPage() {
   const [result, setResult] = useState<MovieData>();
   const [trailerId, setTrailerId] = useState<string>();
-  const { id, data } = useLocalSearchParams<{ id: string; data: any }>();
+  const { data } = useLocalSearchParams<{ id: string; data: any }>();
+
+  const getTrailerHeight = () => {
+    const windowWidth = Dimensions.get("window").width;
+    let height = ((windowWidth - 48) / 16) * 9;
+    return height;
+  };
+
+  const [trailerHeight, setTrailerHeight] = useState<number>(0);
 
   useEffect(() => {
+    // Parse query data
     setResult(JSON.parse(data));
   }, []);
 
   useEffect(() => {
-    if (!result?.id) return;
+    if (!result?.id) return; // Wait for the parsed data
+
     getVideos(result.id).then((response) => {
       if (
         response.results?.length > 0 &&
@@ -37,22 +46,12 @@ export default function ShowPage() {
     });
   }, [result]);
 
-  const getTrailerHeight = () => {
-    const windowWidth = Dimensions.get("window").width;
-    const windowHeight = Dimensions.get("window").height;
-    const trailerWidht = windowWidth - 14;
-    let height = (trailerWidht / windowWidth) * windowHeight;
-    height = ((windowWidth - 48) / 16) * 9;
-    console.log(height);
-    return height;
-  };
-  const [trailerHeight, setTrailerHeight] = useState<number>(0);
-
   useEffect(() => {
     setTrailerHeight(getTrailerHeight());
     const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setTrailerHeight(getTrailerHeight());
     });
+
     return () => {
       subscription.remove();
     };
@@ -63,7 +62,7 @@ export default function ShowPage() {
       <View style={styles.cover}>
         <Image
           source={{
-            uri: "https://image.tmdb.org/t/p/w300" + result.poster_path,
+            uri: CoverURL + result.poster_path,
           }}
           style={styles.background}
           blurRadius={10}
@@ -79,31 +78,21 @@ export default function ShowPage() {
       </View>
 
       <View style={styles.detailsContainer}>
-        <View
-          style={{
-            marginHorizontal: "auto",
-            backgroundColor: "#343a44",
-            width: 46,
-            height: 4,
-            borderRadius: 100,
-          }}
-        ></View>
+        <View style={styles.menuDivider}></View>
         <View style={{ ...styles.section, borderTopWidth: 0 }}>
-          <View style={{ rowGap: 10 }}>
-            <View>
-              <Text style={styles.title}>{result.title || result.name}</Text>
-              <Text style={styles.date}>
-                {new Date(result.release_date || result.first_air_date || "")
-                  .toDateString()
-                  .substring(4)}
-              </Text>
-            </View>
-            <Text style={styles.date}>{result.overview}</Text>
-
-            <Button selected onPress={() => {}}>
-              Add to Library
-            </Button>
+          <View>
+            <Text style={styles.title}>{result.title || result.name}</Text>
+            <Text style={styles.date}>
+              {new Date(result.release_date || result.first_air_date || "")
+                .toDateString()
+                .substring(4)}
+            </Text>
           </View>
+          <Text style={styles.date}>{result.overview}</Text>
+
+          <Button selected onPress={() => {}}>
+            Add to Library
+          </Button>
         </View>
 
         {trailerId ? (
@@ -115,13 +104,13 @@ export default function ShowPage() {
               webViewProps={{
                 // Mobile style
                 containerStyle: {
-                  borderRadius: 14,
+                  ...styles.player,
                   height: trailerHeight,
                 },
               }}
               webViewStyle={{
                 // Web style
-                borderRadius: 14,
+                ...styles.player,
                 height: trailerHeight,
               }}
               height={trailerHeight}
@@ -158,11 +147,20 @@ const styles = StyleSheet.create({
     borderTopColor: "#1C1F25",
     borderTopWidth: 2,
     paddingVertical: 16,
-    flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    rowGap: 10,
   },
   title: { color: "white", fontSize: 20, fontWeight: "bold" },
   date: { color: "#959595", fontWeight: "semibold" },
   rate: { color: "white", fontWeight: "bold" },
+  player: {
+    borderRadius: 14,
+  },
+  menuDivider: {
+    marginHorizontal: "auto",
+    backgroundColor: "#343a44",
+    width: 46,
+    height: 4,
+    borderRadius: 100,
+  },
 });
