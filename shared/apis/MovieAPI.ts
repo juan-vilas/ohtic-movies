@@ -10,6 +10,7 @@ const options = {
 };
 
 export const getTrendingAll = async (page: number): Promise<Trending> => {
+  console.log("page", page);
   const response = await fetch(
     `https://api.themoviedb.org/3/trending/all/day?page=${page}&language=en-US`,
     options

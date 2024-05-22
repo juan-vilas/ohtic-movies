@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { Trending, TrendingState } from "../interfaces/trending";
 
 const initialState: TrendingState = {
-  page: 1,
+  page: 0,
   results: [],
   total_pages: 10,
   total_results: 0,

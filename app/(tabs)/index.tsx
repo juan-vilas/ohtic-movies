@@ -36,15 +36,30 @@ export default function TabOneScreen() {
 
   const [refresh, setRefresh] = useState(true);
   const [trending, setTrending] = useState<TrendingState>({
-    page: 1,
+    page: 0,
     results: [],
     total_pages: 0,
     total_results: 0,
   });
   const [filter, setFilter] = useState<Filter>("all");
   const [pages, setPages] = useState<number>(1);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Get 3 pages on page initialization
+  useEffect(() => {
+    (async () => {
+      const PAGES = 3;
+      for (var i = 1; i <= PAGES; i++) {
+        const response = await movieAPI.getTrendingAll(i);
+        if (response) await dispatch(getTrendingAll(response));
+      }
+      setPages(PAGES + 1);
+      setIsInitialized(true);
+    })();
+  }, []);
 
   useEffect(() => {
+    if (!isInitialized) return;
     // if (filter === "movies") {
     //   if (trendingMovies.results.length === 0) {
     //     movieAPI.getTrendingMovies(pages).then((response) => {
@@ -66,15 +81,15 @@ export default function TabOneScreen() {
     //   }
     // }
     if (filter === "all") {
-      const min = Math.min(trendingAll.total_pages, trendingAll.page + 3);
-      for (var i = trendingAll.page + 1; i <= min; i++) {
-        console.log(i, min);
-        movieAPI.getTrendingAll(i).then((response) => {
+      (async () => {
+        const min = Math.min(trendingAll.total_pages, trendingAll.page + 3);
+        for (var i = pages === 1 ? 1 : trendingAll.page + 1; i <= min; i++) {
+          const response = await movieAPI.getTrendingAll(i);
           dispatch(getTrendingAll(response));
-        });
-      }
+        }
+      })();
     }
-  }, [pages, filter]);
+  }, [pages]);
 
   useEffect(() => {
     setRefresh(!refresh);
@@ -97,9 +112,9 @@ export default function TabOneScreen() {
     >
       <FlashList
         data={[0]}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.3}
         estimatedItemSize={716}
-        onEndReached={() => setPages(pages + 1)}
+        onEndReached={() => setPages(pages + 3)}
         renderItem={() => {
           return (
             <>
@@ -136,7 +151,13 @@ export default function TabOneScreen() {
               </View>
               {trending.total_results > 0
                 ? trending.results.map((item, index) => {
-                    return <MovieShelf extraData={refresh} data={item} />;
+                    return (
+                      <MovieShelf
+                        extraData={refresh}
+                        data={item}
+                        key={"movieshelf-" + index}
+                      />
+                    );
                   })
                 : null}
 
@@ -144,10 +165,17 @@ export default function TabOneScreen() {
             </>
           );
         }}
-        style={styles.container}
       />
     </LinearGradient>
   );
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
+  });
 }
 
 const styles = StyleSheet.create({
