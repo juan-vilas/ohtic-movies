@@ -61,10 +61,6 @@ const Movie3DCover = ({
     );
   }, []);
 
-  useEffect(() => {
-    console.log(colorsLoaded, dominantColor, loaded);
-  }, [colorsLoaded, dominantColor, loaded]);
-
   return !data.poster_path ? null : (
     <View
       style={{
@@ -102,15 +98,26 @@ const Movie3DCover = ({
               }}
             />
 
-            <View style={styles.rating}>
+            <View style={{ ...styles.rating, width }}>
               <LinearGradient // Background Linear Gradient
                 colors={["rgba(255,255,255,0)", "rgba(0,0,0,1)"]}
                 style={{ ...styles.ratingGradient, width }}
                 start={{ x: 0.5, y: 0 }}
               ></LinearGradient>
-              <Ionicons name="star" color={"gold"} size={14}></Ionicons>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  columnGap: 4,
+                }}
+              >
+                <Ionicons name="star" color={"gold"} size={14} />
+                <Text style={{ color: "white" }}>
+                  {data.vote_average.toFixed(2)}
+                </Text>
+              </View>
               <Text style={{ color: "white" }}>
-                {data.vote_average.toFixed(2)}
+                {data.media_type === "movie" ? "MOVIE" : "TV"}
               </Text>
             </View>
 
@@ -119,12 +126,6 @@ const Movie3DCover = ({
                 style={{
                   ...styles.threeDGradientEffect,
                   borderBottomWidth: height,
-                  transform: [
-                    { perspective: 10 },
-                    { rotateY: "5deg" },
-                    { skewY: "0deg" },
-                    { scaleY: 0.95 },
-                  ],
                 }}
               >
                 <LinearGradient // Background Linear Gradient
@@ -160,12 +161,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     bottom: 0,
-    paddingLeft: 8,
+    paddingHorizontal: 8,
     paddingBottom: 4,
-    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     columnGap: 4,
+    justifyContent: "space-between",
+    flex: 1,
   },
   ratingGradient: {
     position: "absolute",
@@ -183,6 +185,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
     borderTopRightRadius: 5,
     zIndex: -1,
+    transform: [
+      { perspective: 10 },
+      { rotateY: "5deg" },
+      { skewY: "0deg" },
+      { scaleY: 0.95 },
+    ],
   },
 
   threeDGradientEffectBackground: {

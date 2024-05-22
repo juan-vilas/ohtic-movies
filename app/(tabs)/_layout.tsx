@@ -1,12 +1,10 @@
-import { Link, Tabs, router } from "expo-router";
-import React, { ComponentProps } from "react";
-import { Pressable, StyleSheet } from "react-native";
-import { View } from "@/components/Themed";
-import { useColorScheme } from "@/components/useColorScheme";
+import Colors from "@/shared/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
+import { Tabs, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import Colors from "@/shared/constants/Colors";
+import React, { ComponentProps } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 
 function TabBarIcon({
   style,
@@ -16,8 +14,6 @@ function TabBarIcon({
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <>
       <StatusBar style="light"></StatusBar>

@@ -1,22 +1,16 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { ComponentProps, useEffect } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/components/useColorScheme";
-import { Pressable, StatusBar, StyleSheet, View } from "react-native";
-import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/shared/constants/Colors";
-import { Provider } from "react-redux";
 import { store } from "@/shared/redux/store";
+import { Ionicons } from "@expo/vector-icons";
+import { IconProps } from "@expo/vector-icons/build/createIconSet";
+import { Pressable, StyleSheet } from "react-native";
+import { Provider } from "react-redux";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,33 +57,29 @@ function TabBarIcon({
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
     <Provider store={store}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen
-            name="shows/[id]"
-            options={{
-              presentation: "modal",
-              headerShown: true,
-              headerTransparent: true,
-              title: "",
-              headerLeft: () => (
-                <Pressable
-                  style={{ ...styles.iconStyle, marginHorizontal: 0 }}
-                  onPress={() => router.back()}
-                >
-                  <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-                </Pressable>
-              ),
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="shows/[id]"
+          options={{
+            presentation: "modal",
+            headerShown: true,
+            headerTransparent: true,
+            title: "",
+            headerLeft: () => (
+              <Pressable
+                style={{ ...styles.iconStyle, marginHorizontal: 0 }}
+                onPress={() => router.back()}
+              >
+                <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
+              </Pressable>
+            ),
+          }}
+        />
+      </Stack>
     </Provider>
   );
 }

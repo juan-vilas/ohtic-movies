@@ -1,32 +1,21 @@
+import { styles as tabStyles } from "@/app/(tabs)/_layout";
+import Button from "@/components/Button";
+import MovieShelf from "@/components/MovieShelf";
+import * as movieAPI from "@/shared/apis/MovieAPI";
+import { TrendingState } from "@/shared/interfaces/trending";
+import { RootState } from "@/shared/redux/store";
+import { getTrendingAll } from "@/shared/redux/trendingAll";
+import { FlashList } from "@shopify/flash-list";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
-  Image,
   Platform,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
+  View,
 } from "react-native";
-
-import { View } from "@/components/Themed";
-import { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
-import MovieShelf from "@/components/MovieShelf";
-import { styles as tabStyles } from "@/app/(tabs)/_layout";
-import {
-  MovieData,
-  Trending,
-  TrendingState,
-} from "@/shared/interfaces/trending";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/shared/redux/store";
-import * as movieAPI from "@/shared/apis/MovieAPI";
-import { getTrendingMovies } from "@/shared/redux/trendingMovies";
-import { getTrendingTV } from "@/shared/redux/trendingTV";
-import { getTrendingAll } from "@/shared/redux/trendingAll";
-import Button from "@/components/Button";
-import Movie3DCover from "@/components/Movie3DCover";
-import { FlashList } from "@shopify/flash-list";
 
 type Filter = "all" | "movies" | "tv";
 
@@ -97,17 +86,11 @@ export default function TabOneScreen() {
 
   useEffect(() => {
     setRefresh(!refresh);
-  }, [trending]);
+  }, [trending, pages]);
 
   useEffect(() => {
     setTrending(trendingAll);
   }, [trendingAll]);
-
-  useEffect(() => {
-    console.log("new page", pages);
-
-    setRefresh(!refresh);
-  }, [pages]);
 
   return (
     <LinearGradient
@@ -123,17 +106,7 @@ export default function TabOneScreen() {
           return (
             <>
               <View style={styles.marginTopView}></View>
-              <View
-                style={{
-                  backgroundColor: "#14171D",
-                  borderRadius: 100,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginHorizontal: 46,
-                  padding: 8,
-                }}
-              >
+              <View style={styles.filterContainer}>
                 <Button
                   onPress={() => setFilter("all")}
                   selected={filter === "all"}
@@ -199,5 +172,14 @@ const styles = StyleSheet.create({
   marginBottomView: {
     height: tabStyles.tabBarStyle.height + 38,
     backgroundColor: "transparent",
+  },
+  filterContainer: {
+    backgroundColor: "#14171D",
+    borderRadius: 100,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 46,
+    padding: 8,
   },
 });
