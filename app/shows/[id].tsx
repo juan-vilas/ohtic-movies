@@ -14,6 +14,7 @@ import { MovieData } from "@/shared/interfaces/trending";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Videos } from "@/shared/interfaces/videos";
 import { getVideos } from "@/shared/apis/MovieAPI";
+import Button from "@/components/Button";
 
 export default function ShowPage() {
   const [result, setResult] = useState<MovieData>();
@@ -78,24 +79,33 @@ export default function ShowPage() {
       </View>
 
       <View style={styles.detailsContainer}>
+        <View
+          style={{
+            marginHorizontal: "auto",
+            backgroundColor: "#343a44",
+            width: 46,
+            height: 4,
+            borderRadius: 100,
+          }}
+        ></View>
         <View style={{ ...styles.section, borderTopWidth: 0 }}>
-          <View style={{}}>
-            <Text style={styles.title}>{result.title || result.name}</Text>
-            <Text style={styles.date}>
-              {new Date(result.release_date || result.first_air_date || "")
-                .toDateString()
-                .substring(4)}
-            </Text>
+          <View style={{ rowGap: 10 }}>
+            <View>
+              <Text style={styles.title}>{result.title || result.name}</Text>
+              <Text style={styles.date}>
+                {new Date(result.release_date || result.first_air_date || "")
+                  .toDateString()
+                  .substring(4)}
+              </Text>
+            </View>
             <Text style={styles.date}>{result.overview}</Text>
+
+            <Button selected onPress={() => {}}>
+              Add to Library
+            </Button>
           </View>
         </View>
-        <View style={styles.section}>
-          <Text style={styles.detailsText}>add to watchlist</Text>
-          <Text style={styles.detailsText}>add to library</Text>
-        </View>
-        <View style={styles.section}>
-          <Text style={styles.title}>Watch Online</Text>
-        </View>
+
         {trailerId ? (
           <View>
             <View style={styles.section}>
@@ -140,7 +150,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: "#14181F",
     paddingHorizontal: 24,
-    paddingVertical: 24,
+    paddingTop: 12,
+    paddingBottom: 24,
   },
   detailsText: { color: "white" },
   section: {

@@ -13,7 +13,10 @@ export default function Button(props: Props) {
       style={
         props.selected
           ? styles.selected
-          : { paddingVertical: 14, paddingHorizontal: 36 }
+          : {
+              paddingVertical: 14,
+              paddingHorizontal: 36,
+            }
       }
       onPress={props.onPress}
     >
@@ -40,6 +43,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    alignSelf: "flex-start",
   },
   notSelectedText: {
     color: "#949599",
