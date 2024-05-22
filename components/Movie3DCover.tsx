@@ -15,7 +15,7 @@ import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
 import hexToRgba from "hex-to-rgba";
 import { Link, router } from "expo-router";
-import { Result, Trending } from "@/shared/interfaces/trending";
+import { MovieData, Trending } from "@/shared/interfaces/trending";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
   width: number;
   animation?: boolean;
   style?: Object;
-  data: Result;
+  data: MovieData;
 }
 
 const fadeIn = {
@@ -50,20 +50,37 @@ const Movie3DCover = ({
 
   useEffect(() => {
     if (!data.poster_path) return;
-    getColors("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
-      (response) => {
-        if (response["platform"] === "android" && Platform.OS === "android") {
-          setColors(response.dominant);
-        } else if (response["platform"] === "ios" && Platform.OS === "ios") {
-          setColors(response.background);
-        }
+    {
+      if (Platform.OS === "web") {
+        setColors("#cecece");
         setColorsLoaded(true);
+      } else {
+        getColors("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
+          (response) => {
+            if (
+              response["platform"] === "android" &&
+              Platform.OS === "android"
+            ) {
+              setColors(response.dominant);
+            } else if (
+              response["platform"] === "ios" &&
+              Platform.OS === "ios"
+            ) {
+              setColors(response.background);
+            }
+            setColorsLoaded(true);
+          }
+        );
       }
-    );
+    }
     Image.prefetch("https://image.tmdb.org/t/p/w300" + data.poster_path).then(
-      (value) => setLoaded(value)
+      (value) => setLoaded(true)
     );
   }, []);
+
+  useEffect(() => {
+    console.log(colorsLoaded, dominantColor, loaded);
+  }, [colorsLoaded, dominantColor, loaded]);
 
   return !data.poster_path ? null : (
     <View

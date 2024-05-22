@@ -13,7 +13,11 @@ import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MovieShelf from "@/components/MovieShelf";
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
-import { Result, Trending, TrendingState } from "@/shared/interfaces/trending";
+import {
+  MovieData,
+  Trending,
+  TrendingState,
+} from "@/shared/interfaces/trending";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/shared/redux/store";
 import * as movieAPI from "@/shared/apis/MovieAPI";

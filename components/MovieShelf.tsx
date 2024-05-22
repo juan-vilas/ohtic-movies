@@ -3,10 +3,10 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Movie3DCover from "./Movie3DCover";
 import Colors from "@/shared/constants/Colors";
-import { Result } from "@/shared/interfaces/trending";
+import { MovieData } from "@/shared/interfaces/trending";
 
 interface Props {
-  data: Result[];
+  data: MovieData[];
   extraData: boolean;
   height: number;
   extraHeight?: number;
@@ -29,7 +29,7 @@ export default function MovieShelf({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.flashListContainer}
         ListHeaderComponent={() => <LeftShelf />}
-        renderItem={({ item }: { item: Result }) => {
+        renderItem={({ item }: { item: MovieData }) => {
           return (
             <View
               style={{

@@ -1,18 +1,18 @@
 export interface TrendingState {
   page: number;
-  results: Result[][];
+  results: MovieData[][];
   total_pages: number;
   total_results: number;
 }
 
 export interface Trending {
   page: number;
-  results: Result[];
+  results: MovieData[];
   total_pages: number;
   total_results: number;
 }
 
-export interface Result {
+export interface MovieData {
   backdrop_path: string;
   id: number;
   original_title?: string;

@@ -1,14 +1,22 @@
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Movie3DCover from "@/components/Movie3DCover";
-import { Result } from "@/shared/interfaces/trending";
+import { MovieData } from "@/shared/interfaces/trending";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Videos } from "@/shared/interfaces/videos";
 import { getVideos } from "@/shared/apis/MovieAPI";
 
 export default function ShowPage() {
-  const [result, setResult] = useState<Result>();
+  const [result, setResult] = useState<MovieData>();
   const [trailerId, setTrailerId] = useState<string>();
   const { id, data } = useLocalSearchParams<{ id: string; data: any }>();
 
@@ -28,8 +36,29 @@ export default function ShowPage() {
     });
   }, [result]);
 
+  const getTrailerHeight = () => {
+    const windowWidth = Dimensions.get("window").width;
+    const windowHeight = Dimensions.get("window").height;
+    const trailerWidht = windowWidth - 14;
+    let height = (trailerWidht / windowWidth) * windowHeight;
+    height = ((windowWidth - 48) / 16) * 9;
+    console.log(height);
+    return height;
+  };
+  const [trailerHeight, setTrailerHeight] = useState<number>(0);
+
+  useEffect(() => {
+    setTrailerHeight(getTrailerHeight());
+    const subscription = Dimensions.addEventListener("change", ({ window }) => {
+      setTrailerHeight(getTrailerHeight());
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return !result ? null : (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.cover}>
         <Image
           source={{
@@ -68,21 +97,27 @@ export default function ShowPage() {
           <Text style={styles.title}>Watch Online</Text>
         </View>
         {trailerId ? (
-          <>
+          <View>
             <View style={styles.section}>
               <Text style={styles.title}>Trailer</Text>
             </View>
             <YoutubePlayer
-              webViewStyle={{}}
               webViewProps={{
+                // Mobile style
                 containerStyle: {
                   borderRadius: 14,
+                  height: trailerHeight,
                 },
               }}
-              height={200}
+              webViewStyle={{
+                // Web style
+                borderRadius: 14,
+                height: trailerHeight,
+              }}
+              height={trailerHeight}
               videoId={trailerId}
             />
-          </>
+          </View>
         ) : null}
       </View>
     </ScrollView>
