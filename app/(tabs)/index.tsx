@@ -44,7 +44,7 @@ export default function TabOneScreen() {
       const PAGES = 3;
       for (var i = 1; i <= PAGES; i++) {
         const response = await movieAPI.getTrendingAll(i);
-        if (response) await dispatch(getTrendingAll(response));
+        if (response) dispatch(getTrendingAll(response));
       }
       setPages(PAGES + 1);
       setIsInitialized(true);
@@ -113,7 +113,7 @@ export default function TabOneScreen() {
       style={styles.background}
     >
       <FlashList
-        data={[0]}
+        data={trending.results}
         extraData={refresh}
         onEndReachedThreshold={0.3}
         estimatedItemSize={716}
@@ -125,25 +125,18 @@ export default function TabOneScreen() {
             }}
           />
         )}
+        ListFooterComponent={() => (
+          <View style={styles.marginBottomView}></View>
+        )}
         onEndReached={() => setPages(pages + 3)}
-        renderItem={() => {
+        renderItem={({ item, index }) => {
           return (
-            <>
-              {trending.total_results > 0
-                ? trending.results.map((item, index) => {
-                    return (
-                      <MovieShelf
-                        extraData={refresh}
-                        data={item}
-                        key={"movieshelf-" + index}
-                        height={220}
-                      />
-                    );
-                  })
-                : null}
-
-              <View style={styles.marginBottomView}></View>
-            </>
+            <MovieShelf
+              extraData={refresh}
+              data={item}
+              key={"movieshelf-" + index}
+              height={220}
+            />
           );
         }}
       />
