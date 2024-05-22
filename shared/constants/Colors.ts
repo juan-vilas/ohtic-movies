@@ -2,6 +2,7 @@ const tintColorLight = "#2f95dc";
 const tintColorDark = "#fff";
 
 export default {
+  // Expo default colors
   light: {
     text: "#000",
     background: "#fff",
@@ -16,6 +17,7 @@ export default {
     tabIconDefault: "#ccc",
     tabIconSelected: tintColorDark,
   },
+  // Custom colors
   tabs: {
     tabBarStyle: {
       backgroundColor: "rgba(10, 15, 20, 0.90)",
@@ -26,5 +28,9 @@ export default {
       borderColor: "#11141B",
       unfocusedColor: "#707377",
     },
+  },
+  shelf: {
+    baseColor: "#12151A",
+    borderColor: "#1B1E24",
   },
 };

@@ -1,77 +1,130 @@
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Movie3DCover from "./Movie3DCover";
+import Colors from "@/shared/constants/Colors";
+import { Result } from "@/shared/interfaces/trending";
+
+interface Props {
+  data: Result[];
+  extraData: boolean;
+  height: number;
+  extraHeight?: number;
+  width?: number;
+}
 
 export default function MovieShelf({
   data,
   extraData,
-}: {
-  data: any;
-  extraData: any;
-}) {
+  height,
+  extraHeight = 34,
+  width = 150,
+}: Props) {
   return (
-    <View style={{ marginVertical: 32 }}>
+    <View style={styles.movieShelfContainer}>
       <FlashList
         horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingLeft: 90 }}
         data={data}
         extraData={extraData}
-        renderItem={({ item }: any) => {
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.flashListContainer}
+        ListHeaderComponent={() => <LeftShelf />}
+        renderItem={({ item }: { item: Result }) => {
           return (
-            <Movie3DCover
-              data={item}
-              width={150}
-              height={220}
-              style={{ marginRight: 50 }}
-            />
+            <View
+              style={{
+                height: height + extraHeight,
+              }}
+            >
+              <Movie3DCover
+                data={item}
+                width={width}
+                height={height}
+                style={styles.movie3DCoverContainer}
+              />
+              <MiddleShelf />
+            </View>
           );
         }}
-        estimatedItemSize={220}
+        estimatedItemSize={height + extraHeight}
       />
-
-      <View
-        style={{
-          height: 50,
-          width: "100%",
-          zIndex: -1,
-          position: "absolute",
-          bottom: -14,
-          left: 34,
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <View
-            style={{
-              width: 0,
-              height: 0,
-              backgroundColor: "transparent",
-              borderStyle: "solid",
-              borderRightWidth: 50,
-              borderTopWidth: 50,
-              borderRightColor: "transparent",
-              borderTopColor: "#12151A",
-              transform: [{ rotate: "180deg" }],
-            }}
-          ></View>
-          <View
-            style={{
-              backgroundColor: "#12151A",
-              height: "100%",
-              width: "100%",
-            }}
-          ></View>
-        </View>
-        <View
-          style={{
-            backgroundColor: "#1B1E24",
-            borderBottomLeftRadius: 10,
-            height: 20,
-            width: "100%",
-          }}
-        ></View>
-      </View>
     </View>
   );
 }
+
+function MiddleShelf() {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        height: 70,
+        width: "100%",
+        zIndex: -1,
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: Colors.shelf.baseColor,
+          height: 50,
+          width: "100%",
+        }}
+      ></View>
+      <View
+        style={{
+          backgroundColor: Colors.shelf.borderColor,
+          height: 20,
+        }}
+      ></View>
+    </View>
+  );
+}
+
+function LeftShelf() {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        left: -50,
+        bottom: 0,
+        zIndex: 10,
+      }}
+    >
+      <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            width: 0,
+            height: 0,
+            backgroundColor: "transparent",
+            borderStyle: "solid",
+            borderRightWidth: 50,
+            borderTopWidth: 50,
+            borderRightColor: "transparent",
+            borderTopColor: Colors.shelf.baseColor,
+            transform: [{ rotate: "180deg" }],
+          }}
+        ></View>
+      </View>
+      <View
+        style={{
+          backgroundColor: Colors.shelf.borderColor,
+          borderBottomLeftRadius: 10,
+          height: 20,
+        }}
+      ></View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  movieShelfContainer: {
+    marginVertical: 32,
+  },
+  flashListContainer: {
+    paddingLeft: 90,
+  },
+  movie3DCoverContainer: {
+    marginRight: 50,
+  },
+});

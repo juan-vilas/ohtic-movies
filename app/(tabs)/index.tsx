@@ -156,6 +156,7 @@ export default function TabOneScreen() {
                         extraData={refresh}
                         data={item}
                         key={"movieshelf-" + index}
+                        height={220}
                       />
                     );
                   })
