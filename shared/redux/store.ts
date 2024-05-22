@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import trendingAll from "./trendingAll";
-import trendingTVReducer from "./trendingTV";
 import trendingMoviesReducer from "./trendingMovies";
+import trendingTVReducer from "./trendingTV";
+import watchListReducer from "./watchlist";
 
 export const store = configureStore({
   reducer: {
     trendingAll: trendingAll,
     trendingMovies: trendingMoviesReducer,
     trendingTV: trendingTVReducer,
+    watchList: watchListReducer,
   },
 });
 

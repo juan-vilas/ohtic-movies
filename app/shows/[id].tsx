@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,7 +20,9 @@ import YoutubePlayer from "react-native-youtube-iframe";
 export default function ShowPage() {
   const [result, setResult] = useState<MovieData>();
   const [trailerId, setTrailerId] = useState<string>();
-  const [isTrailerReady, setTrailerIsReady] = useState<boolean>(false);
+  const [isTrailerReady, setTrailerIsReady] = useState<boolean>(
+    Platform.OS === "web"
+  );
   const { data } = useLocalSearchParams<{ id: string; data: any }>();
 
   const getTrailerHeight = () => {
@@ -105,7 +108,9 @@ export default function ShowPage() {
             <View style={styles.section}>
               <Text style={styles.title}>Trailer</Text>
             </View>
-            {!isTrailerReady ? <ActivityIndicator size={"large"} /> : null}
+            {!isTrailerReady ? (
+              <ActivityIndicator color={"white"} size={"large"} />
+            ) : null}
             <YoutubePlayer
               onReady={() =>
                 setTimeout(() => {

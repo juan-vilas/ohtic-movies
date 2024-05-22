@@ -41,21 +41,21 @@ const Movie3DCover = ({
 
   useEffect(() => {
     if (!data.poster_path) return;
-    {
-      if (Platform.OS === "web") {
-        setColors("#cecece");
-        setColorsLoaded(true);
-      } else {
-        getColors(CoverURL + data.poster_path).then((response) => {
-          if (response["platform"] === "android" && Platform.OS === "android") {
-            setColors(response.dominant);
-          } else if (response["platform"] === "ios" && Platform.OS === "ios") {
-            setColors(response.background);
-          }
-          setColorsLoaded(true);
-        });
+    // if (Platform.OS === "web") {
+    //   setColors("#cecece");
+    //   setColorsLoaded(true);
+    // } else {
+    getColors(CoverURL + data.poster_path).then((response) => {
+      if (response["platform"] === "android" && Platform.OS === "android") {
+        setColors(response.dominant);
+      } else if (response["platform"] === "ios" && Platform.OS === "ios") {
+        setColors(response.background);
+      } else if (response["platform"] === "web" && Platform.OS === "web") {
+        setColors(response.dominant);
       }
-    }
+      setColorsLoaded(true);
+    });
+    // }
     Image.prefetch(CoverURL + data.poster_path).then((value) =>
       setLoaded(true)
     );

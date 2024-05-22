@@ -1,3 +1,7 @@
+export interface WatchListState {
+  results: MovieData[][];
+}
+
 export interface TrendingState {
   page: number;
   results: MovieData[][];

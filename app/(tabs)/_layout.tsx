@@ -33,7 +33,7 @@ export default function TabLayout() {
           ),
           headerRight: () => (
             <View style={styles.iconStyle}>
-              <TabBarIcon size={18} name={"settings-outline"} color={"#fff"} />
+              <TabBarIcon size={18} name={"person-outline"} color={"#fff"} />
             </View>
           ),
           tabBarStyle: styles.tabBarStyle,
@@ -47,7 +47,7 @@ export default function TabLayout() {
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
                 size={24}
-                name={"search"}
+                name={"home-outline"}
                 color={focused ? color : Colors.tabs.iconStyle.unfocusedColor}
               />
             ),
