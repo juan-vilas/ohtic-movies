@@ -7,7 +7,7 @@ export interface Videos {
     key: string;
     site: "YouTube" | "Vimeo" | "Dailymotion";
     size: number;
-    type: string;
+    type: "Teaser" | "Featurette";
     official: boolean;
     published_at: string;
     id: string;

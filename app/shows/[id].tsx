@@ -37,11 +37,15 @@ export default function ShowPage() {
     if (!result?.id) return; // Wait for the parsed data
 
     getVideos(result.id).then((response) => {
-      if (
-        response.results?.length > 0 &&
-        response.results[0].site === "YouTube"
-      ) {
-        setTrailerId(response.results[0].key);
+      if (response.results?.length > 0) {
+        // Find official trailer
+        for (const result of response.results) {
+          if (!result.official) continue;
+          if (result.type !== "Teaser") continue;
+          if (result.site !== "YouTube") continue;
+          setTrailerId(result.key);
+          break;
+        }
       }
     });
   }, [result]);
