@@ -54,65 +54,18 @@ export default function MovieShelf({
 
 function MiddleShelf() {
   return (
-    <View
-      style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        height: 70,
-        width: "100%",
-        zIndex: -1,
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: Colors.shelf.baseColor,
-          height: 50,
-          width: "100%",
-        }}
-      ></View>
-      <View
-        style={{
-          backgroundColor: Colors.shelf.borderColor,
-          height: 20,
-        }}
-      ></View>
+    <View style={styles.middleShelfContainer}>
+      <View style={styles.baseShelf}></View>
+      <View style={styles.borderShelf}></View>
     </View>
   );
 }
 
 function LeftShelf() {
   return (
-    <View
-      style={{
-        position: "absolute",
-        left: -50,
-        bottom: 0,
-        zIndex: 10,
-      }}
-    >
-      <View style={{ flexDirection: "row" }}>
-        <View
-          style={{
-            width: 0,
-            height: 0,
-            backgroundColor: "transparent",
-            borderStyle: "solid",
-            borderRightWidth: 50,
-            borderTopWidth: 50,
-            borderRightColor: "transparent",
-            borderTopColor: Colors.shelf.baseColor,
-            transform: [{ rotate: "180deg" }],
-          }}
-        ></View>
-      </View>
-      <View
-        style={{
-          backgroundColor: Colors.shelf.borderColor,
-          borderBottomLeftRadius: 10,
-          height: 20,
-        }}
-      ></View>
+    <View style={styles.leftShelfContainer}>
+      <View style={styles.leftShelfBase}></View>
+      <View style={styles.leftShelfCorner}></View>
     </View>
   );
 }
@@ -126,5 +79,43 @@ const styles = StyleSheet.create({
   },
   movie3DCoverContainer: {
     marginRight: 50,
+  },
+  middleShelfContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    height: 70,
+    width: "100%",
+    zIndex: -1,
+  },
+  baseShelf: {
+    backgroundColor: Colors.shelf.baseColor,
+    height: 50,
+    width: "100%",
+  },
+  borderShelf: {
+    backgroundColor: Colors.shelf.borderColor,
+    height: 20,
+  },
+  leftShelfContainer: {
+    position: "absolute",
+    left: -50,
+    bottom: 0,
+  },
+  leftShelfBase: {
+    width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderRightWidth: 50,
+    borderTopWidth: 50,
+    borderRightColor: "transparent",
+    borderTopColor: Colors.shelf.baseColor,
+    transform: [{ rotate: "180deg" }],
+  },
+  leftShelfCorner: {
+    backgroundColor: Colors.shelf.borderColor,
+    borderBottomLeftRadius: 10,
+    height: 20,
   },
 });
