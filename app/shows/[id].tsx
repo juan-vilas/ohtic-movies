@@ -6,6 +6,7 @@ import { MovieData } from "@/shared/interfaces/trending";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   ScrollView,
@@ -18,6 +19,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 export default function ShowPage() {
   const [result, setResult] = useState<MovieData>();
   const [trailerId, setTrailerId] = useState<string>();
+  const [isTrailerReady, setTrailerIsReady] = useState<boolean>(false);
   const { data } = useLocalSearchParams<{ id: string; data: any }>();
 
   const getTrailerHeight = () => {
@@ -104,20 +106,26 @@ export default function ShowPage() {
             <View style={styles.section}>
               <Text style={styles.title}>Trailer</Text>
             </View>
+            {!isTrailerReady ? <ActivityIndicator size={"large"} /> : null}
             <YoutubePlayer
+              onReady={() =>
+                setTimeout(() => {
+                  setTrailerIsReady(true);
+                }, 1000)
+              }
               webViewProps={{
                 // Mobile style
                 containerStyle: {
                   ...styles.player,
-                  height: trailerHeight,
+                  height: isTrailerReady ? trailerHeight : 0,
                 },
               }}
               webViewStyle={{
                 // Web style
                 ...styles.player,
-                height: trailerHeight,
+                height: isTrailerReady ? trailerHeight : 0,
               }}
-              height={trailerHeight}
+              height={isTrailerReady ? trailerHeight : 0}
               videoId={trailerId}
             />
           </View>
