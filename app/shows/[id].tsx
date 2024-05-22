@@ -3,6 +3,12 @@ import Movie3DCover from "@/components/Movie3DCover";
 import { getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
 import { MovieData } from "@/shared/interfaces/trending";
+import { RootState } from "@/shared/redux/store";
+import {
+  addMedia,
+  findMediaPosition,
+  removeMedia,
+} from "@/shared/redux/watchlist";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,14 +22,19 @@ import {
   View,
 } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ShowPage() {
+  const { data } = useLocalSearchParams<{ id: string; data: any }>();
+  const watchList = useSelector((state: RootState) => state.watchList);
+  const dispatch = useDispatch();
+
   const [result, setResult] = useState<MovieData>();
+  const [isInWatchList, setIsInWatchList] = useState(false);
   const [trailerId, setTrailerId] = useState<string>();
   const [isTrailerReady, setTrailerIsReady] = useState<boolean>(
     Platform.OS === "web"
   );
-  const { data } = useLocalSearchParams<{ id: string; data: any }>();
 
   const getTrailerHeight = () => {
     const windowWidth = Dimensions.get("window").width;
@@ -36,6 +47,15 @@ export default function ShowPage() {
   useEffect(() => {
     // Parse query data
     setResult(JSON.parse(data));
+
+    setTrailerHeight(getTrailerHeight());
+    const subscription = Dimensions.addEventListener("change", ({ window }) => {
+      setTrailerHeight(getTrailerHeight());
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -56,15 +76,10 @@ export default function ShowPage() {
   }, [result]);
 
   useEffect(() => {
-    setTrailerHeight(getTrailerHeight());
-    const subscription = Dimensions.addEventListener("change", ({ window }) => {
-      setTrailerHeight(getTrailerHeight());
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    if (!result) return;
+    const { found } = findMediaPosition(watchList, result.id);
+    setIsInWatchList(found);
+  }, [watchList, result]);
 
   return !result ? null : (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -98,8 +113,17 @@ export default function ShowPage() {
           </View>
           <Text style={styles.date}>{result.overview}</Text>
 
-          <Button selected onPress={() => {}}>
-            Add to Library
+          <Button
+            selected
+            onPress={() => {
+              if (isInWatchList) {
+                dispatch(removeMedia(result.id));
+              } else {
+                dispatch(addMedia(result));
+              }
+            }}
+          >
+            {isInWatchList ? "Remove from Library" : "Add to Library"}
           </Button>
         </View>
 

@@ -20,6 +20,7 @@ export const watchListSlice = createSlice({
       // Add media if watchlist is empty
       if (state.results.length === 0) {
         state.results.push([action.payload]);
+        console.log("added media 1 ");
         return;
       }
 
@@ -31,6 +32,7 @@ export const watchListSlice = createSlice({
       // Save media
       if (!found) {
         state.results[firstNotFullPagePos].push(action.payload);
+        console.log("added media 2");
       }
     },
   },
