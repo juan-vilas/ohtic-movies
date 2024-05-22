@@ -5,6 +5,8 @@ import * as movieAPI from "@/shared/apis/MovieAPI";
 import { TrendingState } from "@/shared/interfaces/trending";
 import { RootState } from "@/shared/redux/store";
 import { getTrendingAll } from "@/shared/redux/trendingAll";
+import { getTrendingMovies } from "@/shared/redux/trendingMovies";
+import { getTrendingTV } from "@/shared/redux/trendingTV";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
@@ -51,31 +53,37 @@ export default function TabOneScreen() {
     })();
   }, []);
 
+  // Fetch more pages on end reach depending on selected filter
   useEffect(() => {
     if (!isInitialized) return;
-    // if (filter === "movies") {
-    //   if (trendingMovies.results.length === 0) {
-    //     movieAPI.getTrendingMovies(pages).then((response) => {
-    //       dispatch(getTrendingMovies(response));
-    //       setTrending(response);
-    //     });
-    //   } else {
-    //     setTrending(trendingMovies);
-    //   }
-    // }
-    // if (filter === "tv") {
-    //   if (trendingTV.results.length === 0) {
-    //     movieAPI.getTrendingTV(pages).then((response) => {
-    //       dispatch(getTrendingTV(response));
-    //       setTrending(response);
-    //     });
-    //   } else {
-    //     setTrending(trendingTV);
-    //   }
-    // }
+
+    if (filter === "tv") {
+      (async () => {
+        const min = Math.min(trendingTV.total_pages || 10, trendingTV.page + 3); // Fetches 3 pages
+        for (var i = trendingTV.page + 1; i <= min; i++) {
+          const response = await movieAPI.getTrendingTV(i);
+          dispatch(getTrendingTV(response));
+        }
+      })();
+    }
+    if (filter === "movies") {
+      (async () => {
+        const min = Math.min(
+          trendingMovies.total_pages || 10,
+          trendingMovies.page + 3
+        ); // Fetches 3 pages
+        for (var i = trendingMovies.page + 1; i <= min; i++) {
+          const response = await movieAPI.getTrendingMovies(i);
+          dispatch(getTrendingMovies(response));
+        }
+      })();
+    }
     if (filter === "all") {
       (async () => {
-        const min = Math.min(trendingAll.total_pages, trendingAll.page + 3); // Fetches 3 pages
+        const min = Math.min(
+          trendingAll.total_pages || 10,
+          trendingAll.page + 3
+        ); // Fetches 3 pages
         for (var i = trendingAll.page + 1; i <= min; i++) {
           const response = await movieAPI.getTrendingAll(i);
           dispatch(getTrendingAll(response));
@@ -85,12 +93,20 @@ export default function TabOneScreen() {
   }, [pages]);
 
   useEffect(() => {
-    setRefresh(!refresh);
-  }, [trending, pages]);
+    if (filter === "all") {
+      setTrending(trendingAll);
+    }
+    if (filter === "movies") {
+      setTrending(trendingMovies);
+    }
+    if (filter === "tv") {
+      setTrending(trendingTV);
+    }
+  }, [filter, trendingAll, trendingMovies, trendingTV]);
 
   useEffect(() => {
-    setTrending(trendingAll);
-  }, [trendingAll]);
+    setRefresh(!refresh);
+  }, [trending, pages]);
 
   return (
     <LinearGradient
