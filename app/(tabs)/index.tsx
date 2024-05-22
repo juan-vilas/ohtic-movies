@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   const trendingAll = useSelector((state: RootState) => state.trendingAll);
   const trendingMovies = useSelector(
     (state: RootState) => state.trendingMovies

@@ -72,9 +72,8 @@ const Movie3DCover = ({
     >
       <Link
         href={{
-          pathname: "/shows/[id]",
+          pathname: "/shows/[data]",
           params: {
-            id: "bacon",
             data: JSON.stringify(data),
           },
         }}
