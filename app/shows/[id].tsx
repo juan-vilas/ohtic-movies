@@ -75,7 +75,6 @@ export default function ShowPage() {
         />
         <Movie3DCover
           data={result}
-          animation={false}
           rotate
           width={150 * 1.5}
           height={220 * 1.5}

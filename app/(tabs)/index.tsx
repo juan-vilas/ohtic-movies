@@ -1,5 +1,5 @@
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
-import Button from "@/components/Button";
+import FiltersMenu, { Filter } from "@/components/FiltersMenu";
 import MovieShelf from "@/components/MovieShelf";
 import * as movieAPI from "@/shared/apis/MovieAPI";
 import { TrendingState } from "@/shared/interfaces/trending";
@@ -18,8 +18,6 @@ import {
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-
-type Filter = "all" | "movies" | "tv";
 
 export default function TabOneScreen() {
   const trendingAll = useSelector((state: RootState) => state.trendingAll);
@@ -102,6 +100,7 @@ export default function TabOneScreen() {
     if (filter === "tv") {
       setTrending(trendingTV);
     }
+    setRefresh(!refresh);
   }, [filter, trendingAll, trendingMovies, trendingTV]);
 
   useEffect(() => {
@@ -115,33 +114,21 @@ export default function TabOneScreen() {
     >
       <FlashList
         data={[0]}
+        extraData={refresh}
         onEndReachedThreshold={0.3}
         estimatedItemSize={716}
+        ListHeaderComponent={() => (
+          <FiltersMenu
+            defaultFilter={filter}
+            currentFilter={(filter) => {
+              setFilter(filter);
+            }}
+          />
+        )}
         onEndReached={() => setPages(pages + 3)}
         renderItem={() => {
           return (
             <>
-              <View style={styles.marginTopView}></View>
-              <View style={styles.filterContainer}>
-                <Button
-                  onPress={() => setFilter("all")}
-                  selected={filter === "all"}
-                >
-                  All
-                </Button>
-                <Button
-                  onPress={() => setFilter("movies")}
-                  selected={filter === "movies"}
-                >
-                  Movies
-                </Button>
-                <Button
-                  onPress={() => setFilter("tv")}
-                  selected={filter === "tv"}
-                >
-                  TV
-                </Button>
-              </View>
               {trending.total_results > 0
                 ? trending.results.map((item, index) => {
                     return (
@@ -164,14 +151,6 @@ export default function TabOneScreen() {
   );
 }
 
-function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, ms);
-  });
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -184,7 +163,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-  marginTopView: { height: 68, backgroundColor: "transparent" },
   marginBottomView: {
     height: tabStyles.tabBarStyle.height + 38,
     backgroundColor: "transparent",

@@ -1,9 +1,9 @@
-import { FlashList } from "@shopify/flash-list";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Movie3DCover from "./Movie3DCover";
 import Colors from "@/shared/constants/Colors";
 import { MovieData } from "@/shared/interfaces/trending";
+import { FlashList } from "@shopify/flash-list";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Movie3DCover from "./Movie3DCover";
 
 interface Props {
   data: MovieData[];
