@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import { Filter } from "@/components/FiltersMenu";
-import Movie3DCover from "@/components/Movie3DCover";
+import Movie3DCase from "@/components/Movie3DCover";
 import { getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
 import { MediaData, MediaPosition } from "@/shared/interfaces/trending";
@@ -100,7 +100,7 @@ export default function ShowPage() {
           style={styles.background}
           blurRadius={10}
         />
-        <Movie3DCover
+        <Movie3DCase
           data={result}
           rotate
           width={150 * 1.5}

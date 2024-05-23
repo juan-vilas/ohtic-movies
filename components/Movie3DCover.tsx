@@ -18,16 +18,10 @@ interface Props {
   data: MediaData;
 }
 
-const fadeIn = {
-  from: {
-    opacity: 0,
-  },
-  to: {
-    opacity: 1,
-  },
-};
-
-const Movie3DCover = ({
+/**
+ * Shows a movie case with a 3D effect
+ */
+const Movie3DCase = ({
   rotate = false,
   width,
   height,
@@ -80,7 +74,7 @@ const Movie3DCover = ({
       >
         {colorsLoaded && loaded ? (
           <Animatable.View
-            animation={animation ? fadeIn : undefined}
+            animation={animation ? "fadeIn" : undefined}
             style={styles.container}
           >
             <Image
@@ -204,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Movie3DCover;
+export default Movie3DCase;

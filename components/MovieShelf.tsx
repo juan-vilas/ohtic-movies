@@ -3,15 +3,25 @@ import { MediaData } from "@/shared/interfaces/trending";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import Movie3DCover from "./Movie3DCover";
+import Movie3DCase from "./Movie3DCover";
 
+/**
+ * @interface Props
+ * @property {MediaData[]} data - Media, movies or tv shows to show placed on the shelf
+ * @property {number} width - Width of the media.
+ * @property {number} height - Height of the media.
+ * @property {extraHeight} data - Height of the shelf.
+ */
 interface Props {
   data: MediaData[];
+  width?: number;
   height: number;
   extraHeight?: number;
-  width?: number;
 }
 
+/**
+ * Shows movies placed on a shelf.
+ */
 export default function MovieShelf({
   data,
   height,
@@ -33,7 +43,7 @@ export default function MovieShelf({
                 height: height + extraHeight,
               }}
             >
-              <Movie3DCover
+              <Movie3DCase
                 data={item}
                 width={width}
                 height={height}
