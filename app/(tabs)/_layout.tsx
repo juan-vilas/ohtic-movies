@@ -4,7 +4,7 @@ import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { Tabs, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { ComponentProps } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import { HeaderLeft } from "../_layout";
 
 function TabBarIcon({
@@ -78,9 +78,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 18,
     marginHorizontal: 18,
-    height: 62,
+    height: Platform.OS === "android" ? 62 : 62,
     position: "absolute",
     borderRadius: 100,
+    paddingBottom: 0, // Needed for ios
   },
   iconStyle: {
     backgroundColor: Colors.tabs.iconStyle.backgroundColor,

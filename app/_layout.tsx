@@ -69,8 +69,17 @@ function RootLayoutNav() {
   return (
     <Provider store={store}>
       <View style={{ backgroundColor: "black", flex: 1 }}>
-        <Stack screenOptions={{ headerLeft: () => <HeaderLeft /> }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerLeft: () => <HeaderLeft />,
+          }}
+        >
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="signup"
             options={{

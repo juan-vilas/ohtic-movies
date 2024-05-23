@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import Button from "./Button";
 
 export type Filter = "all" | "movie" | "tv";
@@ -38,7 +38,10 @@ export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
 }
 
 const styles = StyleSheet.create({
-  marginTopView: { height: 68, backgroundColor: "transparent" },
+  marginTopView: {
+    height: 68 * (Platform.OS === "ios" ? 2 : 1),
+    backgroundColor: "transparent",
+  },
   filterContainer: {
     backgroundColor: "#14171D",
     borderRadius: 100,
