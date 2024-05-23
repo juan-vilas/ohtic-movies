@@ -1,7 +1,18 @@
 import { Filter } from "@/components/FiltersMenu";
 
-export interface WatchListState {
-  results: MovieData[][];
+export interface MediaPosition {
+  pagePos: number;
+  mediaPos: number;
+  firstNotFullPagePos: number;
+  found: boolean;
+  filter: Filter;
+}
+
+export type WatchListState = {
+  [mediaType in Filter]: WatchListShelf;
+};
+export interface WatchListShelf {
+  results: MediaData[][];
 }
 
 export type TrendingState = {
@@ -10,19 +21,19 @@ export type TrendingState = {
 
 export interface Shelf {
   page: number;
-  results: MovieData[][];
+  results: MediaData[][];
   total_pages: number;
   total_results: number;
 }
 
 export interface Trending {
   page: number;
-  results: MovieData[];
+  results: MediaData[];
   total_pages: number;
   total_results: number;
 }
 
-export interface MovieData {
+export interface MediaData {
   backdrop_path: string;
   id: number;
   original_title?: string;

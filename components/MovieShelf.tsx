@@ -1,13 +1,12 @@
 import Colors from "@/shared/constants/Colors";
-import { MovieData } from "@/shared/interfaces/trending";
+import { MediaData } from "@/shared/interfaces/trending";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import Movie3DCover from "./Movie3DCover";
 
 interface Props {
-  data: MovieData[];
-  extraData: boolean;
+  data: MediaData[];
   height: number;
   extraHeight?: number;
   width?: number;
@@ -15,7 +14,6 @@ interface Props {
 
 export default function MovieShelf({
   data,
-  extraData,
   height,
   extraHeight = 34,
   width = 150,
@@ -27,8 +25,8 @@ export default function MovieShelf({
         data={data}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.flashListContainer}
-        ListHeaderComponent={() => <LeftShelf />}
-        renderItem={({ item }: { item: MovieData }) => {
+        ListHeaderComponent={() => (data.length > 0 ? <LeftShelf /> : null)}
+        renderItem={({ item }: { item: MediaData }) => {
           return (
             <View
               style={{

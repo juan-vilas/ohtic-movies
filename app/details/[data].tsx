@@ -1,8 +1,9 @@
 import Button from "@/components/Button";
+import { Filter } from "@/components/FiltersMenu";
 import Movie3DCover from "@/components/Movie3DCover";
 import { getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
-import { MovieData } from "@/shared/interfaces/trending";
+import { MediaData, MediaPosition } from "@/shared/interfaces/trending";
 import { RootState } from "@/shared/redux/store";
 import { findMediaPosition } from "@/shared/redux/utils";
 import { addMedia, removeMedia } from "@/shared/redux/watchlist";
@@ -26,8 +27,8 @@ export default function ShowPage() {
   const watchList = useSelector((state: RootState) => state.watchList);
   const dispatch = useDispatch();
 
-  const [result, setResult] = useState<MovieData>();
-  const [isInWatchList, setIsInWatchList] = useState(false);
+  const [result, setResult] = useState<MediaData>();
+  const [mediaPositions, setMediaPositions] = useState<MediaPosition[]>([]);
   const [trailerId, setTrailerId] = useState<string>();
   const [isTrailerReady, setTrailerIsReady] = useState<boolean>(
     Platform.OS === "web"
@@ -74,8 +75,19 @@ export default function ShowPage() {
 
   useEffect(() => {
     if (!result) return;
-    const { found } = findMediaPosition(watchList, result.id);
-    setIsInWatchList(found);
+
+    const _mediaPositions = [];
+    for (const filter of ["all", "movie", "tv"]) {
+      const mediaPosition = findMediaPosition(
+        watchList,
+        result.id,
+        filter as Filter
+      );
+      if (mediaPosition.found) {
+        _mediaPositions.push(mediaPosition);
+      }
+    }
+    setMediaPositions(_mediaPositions);
   }, [watchList, result]);
 
   return !result ? null : (
@@ -113,14 +125,28 @@ export default function ShowPage() {
           <Button
             selected
             onPress={() => {
-              if (isInWatchList) {
-                dispatch(removeMedia(result.id));
+              if (mediaPositions.length > 0) {
+                dispatch(removeMedia({ mediaId: result.id, filter: "all" }));
+                dispatch(
+                  removeMedia({
+                    mediaId: result.id,
+                    filter: result.media_type as Filter,
+                  })
+                );
               } else {
-                dispatch(addMedia(result));
+                dispatch(addMedia({ mediaData: result, filter: "all" }));
+                dispatch(
+                  addMedia({
+                    mediaData: result,
+                    filter: result.media_type as Filter,
+                  })
+                );
               }
             }}
           >
-            {isInWatchList ? "Remove from Library" : "Add to Library"}
+            {mediaPositions.length > 0
+              ? "Remove from Library"
+              : "Add to Library"}
           </Button>
         </View>
 

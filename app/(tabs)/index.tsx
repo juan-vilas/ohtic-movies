@@ -10,7 +10,7 @@ import {
 } from "@/shared/redux/trending";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Dimensions,
   Platform,
@@ -28,7 +28,7 @@ export default function HomeScreen() {
 
   const fetchPages = async (pages: number) => {
     const maxPages = Math.min(
-      trending[filter].total_pages || 10,
+      trending[filter].total_pages | 10,
       trending[filter].page + pages
     );
     const _pages = trending[filter].page + 1;
@@ -46,12 +46,6 @@ export default function HomeScreen() {
     }
   };
 
-  const [refresh, setRefresh] = useState(false);
-
-  useEffect(() => {
-    setRefresh(!refresh);
-  }, [trending]);
-
   return (
     <LinearGradient
       colors={["#262A32", "#171B20", "#0B0F14"]}
@@ -59,7 +53,6 @@ export default function HomeScreen() {
     >
       <FlashList
         data={[...trending[filter].results]}
-        extraData={refresh}
         onEndReachedThreshold={0.3}
         estimatedItemSize={716}
         ListHeaderComponent={() => (
@@ -74,15 +67,8 @@ export default function HomeScreen() {
           <View style={styles.marginBottomView}></View>
         )}
         onEndReached={() => fetchPages(3)}
-        renderItem={({ item, index }) => {
-          return (
-            <MovieShelf
-              extraData={refresh}
-              data={item}
-              key={"movieshelf-" + index}
-              height={220}
-            />
-          );
+        renderItem={({ item }) => {
+          return <MovieShelf data={item} height={220} />;
         }}
       />
     </LinearGradient>

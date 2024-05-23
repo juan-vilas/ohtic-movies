@@ -1,6 +1,7 @@
 import { Filter } from "@/components/FiltersMenu";
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
+  MediaPosition,
   Trending,
   TrendingState,
   WatchListState,
@@ -27,12 +28,16 @@ export const pushMediaList = (
   );
 };
 
-export function findMediaPosition(state: WatchListState, mediaId: number) {
+export function findMediaPosition(
+  state: WatchListState,
+  mediaId: number,
+  filter: Filter
+): MediaPosition {
   let found = false;
   let pagePos = -1;
   let mediaPos = -1;
   let firstNotFullPagePos = 0;
-  for (const result of state.results) {
+  for (const result of state[filter].results) {
     pagePos++;
     // If shelf is full, continue to the next one
     if (result.length >= 20) {
@@ -59,5 +64,6 @@ export function findMediaPosition(state: WatchListState, mediaId: number) {
     mediaPos,
     firstNotFullPagePos,
     found: pagePos >= 0 && mediaPos >= 0,
+    filter,
   };
 }

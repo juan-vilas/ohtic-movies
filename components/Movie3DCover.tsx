@@ -1,5 +1,5 @@
 import CoverURL from "@/shared/constants/CoverURL";
-import { MovieData } from "@/shared/interfaces/trending";
+import { MediaData } from "@/shared/interfaces/trending";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
@@ -15,7 +15,7 @@ interface Props {
   width: number;
   animation?: boolean;
   style?: Object;
-  data: MovieData;
+  data: MediaData;
 }
 
 const fadeIn = {
@@ -72,7 +72,7 @@ const Movie3DCover = ({
     >
       <Link
         href={{
-          pathname: "/shows/[data]",
+          pathname: "/details/[data]",
           params: {
             data: JSON.stringify(data),
           },
