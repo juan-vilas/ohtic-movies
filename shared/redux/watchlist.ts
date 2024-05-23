@@ -1,5 +1,6 @@
 import { Filter } from "@/components/FiltersMenu";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { MediaData, WatchListState } from "../interfaces/trending";
 import { findMediaPosition } from "./utils";
 
@@ -8,6 +9,19 @@ const initialState: WatchListState = {
   movie: { results: [] },
   tv: { results: [] },
 };
+
+export const getStorage = createAsyncThunk<WatchListState>(
+  "watchlist/getStorage",
+  async () => {
+    const value = await AsyncStorage.getItem("watchlist");
+
+    if (!!value) {
+      return JSON.parse(value);
+    }
+
+    return initialState;
+  }
+);
 
 export const watchListSlice = createSlice({
   name: "watchList",
@@ -25,6 +39,7 @@ export const watchListSlice = createSlice({
       if (found) {
         state[action.payload.filter].results[pagePos].splice(mediaPos, 1);
       }
+      AsyncStorage.setItem("watchlist", JSON.stringify(state));
     },
     addMedia: (
       state,
@@ -33,6 +48,7 @@ export const watchListSlice = createSlice({
       // Add media if watchlist is empty
       if (state[action.payload.filter].results.length === 0) {
         state[action.payload.filter].results.push([action.payload.mediaData]);
+        AsyncStorage.setItem("watchlist", JSON.stringify(state));
         return;
       }
 
@@ -47,8 +63,15 @@ export const watchListSlice = createSlice({
         state[action.payload.filter].results[firstNotFullPagePos].push(
           action.payload.mediaData
         );
+        AsyncStorage.setItem("watchlist", JSON.stringify(state));
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getStorage.fulfilled, (state, action) => {
+      state = action.payload;
+      return state;
+    });
   },
 });
 

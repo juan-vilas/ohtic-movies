@@ -8,9 +8,10 @@ import {
   addMovieMedia,
   addTVMedia,
 } from "@/shared/redux/trending";
+import { getStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   Platform,
@@ -25,6 +26,10 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState<Filter>("all");
+
+  useEffect(() => {
+    dispatch(getStorage() as any);
+  }, []);
 
   const fetchPages = async (pages: number) => {
     const maxPages = Math.min(
