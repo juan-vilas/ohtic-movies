@@ -1,3 +1,11 @@
+import { getVideos } from "@/shared/apis/MovieAPI";
+
+/**
+ * Interface for {@link getVideos} in the MovieAPI
+ *
+ * @export
+ * @interface Videos
+ */
 export interface Videos {
   id: number;
   results: Array<{
