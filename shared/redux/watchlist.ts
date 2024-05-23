@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { MovieData, WatchListState } from "../interfaces/trending";
+import { findMediaPosition } from "./utils";
 
 const initialState: WatchListState = {
   results: [],
@@ -42,38 +43,3 @@ export const watchListSlice = createSlice({
 export const { addMedia, removeMedia } = watchListSlice.actions;
 
 export default watchListSlice.reducer;
-
-export function findMediaPosition(state: WatchListState, mediaId: number) {
-  let found = false;
-  let pagePos = -1;
-  let mediaPos = -1;
-  let firstNotFullPagePos = 0;
-  for (const result of state.results) {
-    pagePos++;
-    // If shelf is full, continue to the next one
-    if (result.length >= 20) {
-      firstNotFullPagePos++;
-      continue;
-    }
-    // If media is already in watchlist, don't save it
-    for (const media of result) {
-      mediaPos++;
-      if (media.id === mediaId) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      mediaPos = -1;
-    } else {
-      break;
-    }
-  }
-
-  return {
-    pagePos,
-    mediaPos,
-    firstNotFullPagePos,
-    found: pagePos >= 0 && mediaPos >= 0,
-  };
-}

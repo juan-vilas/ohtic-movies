@@ -4,11 +4,8 @@ import { getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
 import { MovieData } from "@/shared/interfaces/trending";
 import { RootState } from "@/shared/redux/store";
-import {
-  addMedia,
-  findMediaPosition,
-  removeMedia,
-} from "@/shared/redux/watchlist";
+import { findMediaPosition } from "@/shared/redux/utils";
+import { addMedia, removeMedia } from "@/shared/redux/watchlist";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {

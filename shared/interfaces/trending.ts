@@ -1,8 +1,14 @@
+import { Filter } from "@/components/FiltersMenu";
+
 export interface WatchListState {
   results: MovieData[][];
 }
 
-export interface TrendingState {
+export type TrendingState = {
+  [mediaType in Filter]: Shelf;
+};
+
+export interface Shelf {
   page: number;
   results: MovieData[][];
   total_pages: number;

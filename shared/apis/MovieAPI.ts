@@ -1,3 +1,4 @@
+import { Filter } from "@/components/FiltersMenu";
 import { Trending } from "../interfaces/trending";
 import { Videos } from "../interfaces/videos";
 
@@ -9,30 +10,16 @@ const options = {
   },
 };
 
-export const getTrendingAll = async (page: number): Promise<Trending> => {
+export const getTrendingShows = async (
+  page: number,
+  filter: Filter
+): Promise<Trending> => {
   const response = await fetch(
-    `https://api.themoviedb.org/3/trending/all/day?page=${page}&language=en-US`,
+    `https://api.themoviedb.org/3/trending/${filter}/day?page=${page}&language=en-US`,
     options
   );
-  const json = await response.json();
-  return json;
-};
-
-export const getTrendingTV = async (page: number): Promise<Trending> => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/trending/tv/day?page=${page}&language=en-US`,
-    options
-  );
-  const json = await response.json();
-  return json;
-};
-
-export const getTrendingMovies = async (page: number): Promise<Trending> => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/trending/movie/day?page=${page}&language=en-US`,
-    options
-  );
-  const json = await response.json();
+  const json: Trending = await response.json();
+  console.log("Fetching", filter, json.results.length);
   return json;
 };
 

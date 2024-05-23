@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Button from "./Button";
 
-export type Filter = "all" | "movies" | "tv";
+export type Filter = "all" | "movie" | "tv";
 
 interface Props {
   defaultFilter: Filter;
@@ -24,8 +24,8 @@ export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
           All
         </Button>
         <Button
-          onPress={() => setFilter("movies")}
-          selected={filter === "movies"}
+          onPress={() => setFilter("movie")}
+          selected={filter === "movie"}
         >
           Movies
         </Button>

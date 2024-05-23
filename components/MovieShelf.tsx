@@ -25,7 +25,6 @@ export default function MovieShelf({
       <FlashList
         horizontal
         data={data}
-        extraData={extraData}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.flashListContainer}
         ListHeaderComponent={() => <LeftShelf />}
