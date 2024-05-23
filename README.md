@@ -4,6 +4,14 @@
 
 Find trending movies and tv shows and save them to your watchlist!
 
+**Features:**
+
+- See trending movies and tv shows
+- Rating
+- Release date
+- Trailers
+- Watchlist
+
 # 🚀 Tech Stack
 
 - ⚛ Expo
