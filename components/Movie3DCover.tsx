@@ -9,6 +9,15 @@ import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { getColors } from "react-native-image-colors";
 
+/**
+ * @interface Props
+ * @property {boolean} rotate - Rotates the movie case a little bit
+ * @property {number} height - Movie case height
+ * @property {number} width - Movie case width
+ * @property {boolean} animation - Fade in animation
+ * @property {Object} style - Style object for the movie case
+ * @property {MediaData} data - Data of the movie
+ */
 interface Props {
   rotate?: boolean;
   height: number;
@@ -35,10 +44,6 @@ const Movie3DCase = ({
 
   useEffect(() => {
     if (!data.poster_path) return;
-    // if (Platform.OS === "web") {
-    //   setColors("#cecece");
-    //   setColorsLoaded(true);
-    // } else {
     getColors(CoverURL + data.poster_path).then((response) => {
       if (response["platform"] === "android" && Platform.OS === "android") {
         setColors(response.dominant);
