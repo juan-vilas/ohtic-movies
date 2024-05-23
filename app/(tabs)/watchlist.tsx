@@ -10,6 +10,7 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { useSelector } from "react-redux";
@@ -39,9 +40,10 @@ export default function WatchListScreen() {
         ListFooterComponent={() => (
           <View style={styles.marginBottomView}></View>
         )}
-        renderItem={({ item }) => {
-          return <MovieShelf data={item} height={220} />;
-        }}
+        renderItem={({ item }) => <MovieShelf data={item} height={220} />}
+        ListEmptyComponent={() => (
+          <Text style={styles.text}>Nothing here... 👻</Text>
+        )}
       />
     </LinearGradient>
   );
@@ -72,4 +74,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 46,
     padding: 8,
   },
+  text: { color: "white", textAlign: "center", marginTop: 28 },
 });
