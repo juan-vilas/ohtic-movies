@@ -7,12 +7,21 @@ import {
   View,
 } from "react-native";
 
+/**
+ * @interface Props
+ * @property {string} label - Label to be shown above the text input
+ * @property {TextInputProps} textInputConfig - Text input props
+ * @property {string} error - Shows an error text if not empty
+ */
 interface Props {
   label: string;
   textInputConfig?: TextInputProps;
   error?: string;
 }
 
+/**
+ * Custom Input for the form
+ */
 export default function Input({ label, textInputConfig, error = "" }: Props) {
   return (
     <View style={styles.inputContainer}>

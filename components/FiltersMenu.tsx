@@ -4,11 +4,19 @@ import Button from "./Button";
 
 export type Filter = "all" | "movie" | "tv";
 
+/**
+ * @interface Props
+ * @property {Filter} defaultFilter - Default filter to be shown selected
+ * @property {(filter:Filter) => void} currentFilter - Callback that returns the current filter
+ */
 interface Props {
   defaultFilter: Filter;
   currentFilter: (filter: Filter) => void;
 }
 
+/**
+ * Shows a filter menu
+ */
 export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
   const [filter, setFilter] = useState<Filter>(defaultFilter);
 

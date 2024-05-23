@@ -1,6 +1,13 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 
+/**
+ * @interface Props
+ * @property {boolean} selected - Selects the button
+ * @property {any} children - Children to be shown inside the button
+ * @property {() => void} onPress - On press function
+ * @property {boolean} alignSelf - If false it converts to a full width button
+ */
 interface Props {
   selected?: boolean;
   children?: any;
@@ -8,6 +15,9 @@ interface Props {
   alignSelf?: boolean;
 }
 
+/**
+ * Custom button
+ */
 export default function Button({
   selected,
   children,

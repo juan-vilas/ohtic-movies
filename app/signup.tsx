@@ -14,6 +14,9 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+/**
+ * Sign up screen
+ */
 export default function SignupScreen() {
   // Error states
   const [usernameErrors, setUsernameErrors] = useState({});
