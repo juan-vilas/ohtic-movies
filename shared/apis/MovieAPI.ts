@@ -19,7 +19,6 @@ export const getTrendingShows = async (
     options
   );
   const json: Trending = await response.json();
-  console.log("Fetching", filter, json.results.length);
   return json;
 };
 
