@@ -5,25 +5,38 @@ interface Props {
   selected?: boolean;
   children?: any;
   onPress: () => void;
+  alignSelf?: boolean;
 }
 
-export default function Button(props: Props) {
+export default function Button({
+  selected,
+  children,
+  onPress,
+  alignSelf = true,
+}: Props) {
   return (
     <Pressable
       style={
-        props.selected
-          ? styles.selected
+        selected
+          ? {
+              ...styles.selected,
+              alignSelf: alignSelf ? "flex-start" : "auto",
+            }
           : {
               paddingVertical: 14,
               paddingHorizontal: 36,
             }
       }
-      onPress={props.onPress}
+      onPress={onPress}
     >
       <Text
-        style={props.selected ? { color: "white" } : styles.notSelectedText}
+        style={
+          selected
+            ? { color: "white", textAlign: "center" }
+            : styles.notSelectedText
+        }
       >
-        {props.children?.toString()}
+        {children?.toString()}
       </Text>
     </Pressable>
   );
@@ -43,7 +56,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    alignSelf: "flex-start",
   },
   notSelectedText: {
     color: "#949599",

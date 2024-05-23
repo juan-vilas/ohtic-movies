@@ -71,7 +71,15 @@ function RootLayoutNav() {
       <View style={{ backgroundColor: "black", flex: 1 }}>
         <Stack screenOptions={{ headerLeft: () => <HeaderLeft /> }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="signup"
+            options={{
+              presentation: "modal",
+              headerShown: true,
+              headerTransparent: true,
+              title: "",
+            }}
+          />
           <Stack.Screen
             name="details/[data]"
             options={{
