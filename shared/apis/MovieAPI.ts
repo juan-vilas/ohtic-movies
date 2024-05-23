@@ -10,6 +10,13 @@ const options = {
   },
 };
 
+/**
+ * Gets the trending shows
+ *
+ * @param {number} page
+ * @param {Filter} filter
+ * @return {*}  {Promise<Trending>}
+ */
 export const getTrendingShows = async (
   page: number,
   filter: Filter
@@ -22,6 +29,12 @@ export const getTrendingShows = async (
   return json;
 };
 
+/**
+ * Gets trailers/teasers from the shows
+ *
+ * @param {number} movieId
+ * @return {*}  {Promise<Videos>}
+ */
 export const getVideos = async (movieId: number): Promise<Videos> => {
   const response = await fetch(
     "https://api.themoviedb.org/3/movie/" + movieId + `/videos?language=en-US`,
