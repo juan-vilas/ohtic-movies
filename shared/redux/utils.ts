@@ -15,22 +15,15 @@ import {
  */
 export const pushMediaList = (
   state: TrendingState,
-  action: PayloadAction<Trending>
+  action: PayloadAction<{ trending: Trending; filter: Filter }>
 ) => {
-  const filter: Filter =
-    action.type === "trending/addAllMedia"
-      ? "all"
-      : action.type === "trending/addMovieMedia"
-      ? "movie"
-      : action.type === "trending/addTVMedia"
-      ? "tv"
-      : "all";
-
-  state[filter].page = action.payload.page;
-  state[filter].total_pages = action.payload.total_pages;
-  state[filter].total_results = action.payload.total_results;
-  state[filter].results.push(
-    action.payload.results.filter((el) => el.media_type !== "person") // Don't push trending people
+  state[action.payload.filter].page = action.payload.trending.page;
+  state[action.payload.filter].total_pages =
+    action.payload.trending.total_pages;
+  state[action.payload.filter].total_results =
+    action.payload.trending.total_results;
+  state[action.payload.filter].results.push(
+    action.payload.trending.results.filter((el) => el.media_type !== "person") // Don't push trending people
   );
 };
 

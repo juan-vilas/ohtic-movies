@@ -16,7 +16,7 @@ const initialState: WatchListState = {
  *
  * @returns {Promise<WatchListState>} A promise that resolves to the retrieved watchlist state.
  */
-const getStorage = createAsyncThunk<WatchListState>(
+export const getStorage = createAsyncThunk<WatchListState>(
   "watchlist/getStorage",
   async () => {
     const value = await AsyncStorage.getItem("watchlist");

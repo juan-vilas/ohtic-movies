@@ -3,11 +3,7 @@ import FiltersMenu, { Filter } from "@/components/FiltersMenu";
 import MovieShelf from "@/components/MovieShelf";
 import * as movieAPI from "@/shared/apis/MovieAPI";
 import { RootState } from "@/shared/redux/store";
-import {
-  addAllMedia,
-  addMovieMedia,
-  addTVMedia,
-} from "@/shared/redux/trending";
+import { addMedia } from "@/shared/redux/trending";
 import { getStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,15 +35,7 @@ export default function HomeScreen() {
     const _pages = trending[filter].page + 1;
     for (var i = _pages; i <= maxPages; i++) {
       const response = await movieAPI.getTrendingShows(i, filter);
-      if (filter === "all") {
-        dispatch(addAllMedia(response));
-      }
-      if (filter === "movie") {
-        dispatch(addMovieMedia(response));
-      }
-      if (filter === "tv") {
-        dispatch(addTVMedia(response));
-      }
+      dispatch(addMedia({ trending: response, filter }));
     }
   };
 

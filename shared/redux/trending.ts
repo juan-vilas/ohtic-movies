@@ -1,7 +1,12 @@
+import { Filter } from "@/components/FiltersMenu";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Trending, TrendingState } from "../interfaces/trending";
 import { pushMediaList } from "./utils";
 
+/**
+ * Initial state for the trending slice.
+ * @type {TrendingState}
+ */
 const initialState: TrendingState = {
   all: {
     page: 0,
@@ -23,22 +28,21 @@ const initialState: TrendingState = {
   },
 };
 
-export const trendingSlice = createSlice({
+const trendingSlice = createSlice({
   name: "trending",
   initialState,
   reducers: {
-    addAllMedia: (state: TrendingState, action: PayloadAction<Trending>) => {
-      if (action.payload.page > state.all.page) {
-        pushMediaList(state, action);
-      }
-    },
-    addTVMedia: (state: TrendingState, action: PayloadAction<Trending>) => {
-      if (action.payload.page > state.tv.page) {
-        pushMediaList(state, action);
-      }
-    },
-    addMovieMedia: (state: TrendingState, action: PayloadAction<Trending>) => {
-      if (action.payload.page > state.movie.page) {
+    /**
+     * Reducer function to add media to the trending state.
+
+     * @param {TrendingState} state - The current trending state.
+     * @param {PayloadAction<{ trending: Trending; filter: Filter }>} action - The action containing trending data.
+     */
+    addMedia: (
+      state: TrendingState,
+      action: PayloadAction<{ trending: Trending; filter: Filter }>
+    ) => {
+      if (action.payload.trending.page > state[action.payload.filter].page) {
         pushMediaList(state, action);
       }
     },
@@ -46,6 +50,6 @@ export const trendingSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addAllMedia, addTVMedia, addMovieMedia } = trendingSlice.actions;
+export const { addMedia } = trendingSlice.actions;
 
 export default trendingSlice.reducer;
