@@ -57,11 +57,19 @@ function TabBarIcon({
   return <Ionicons size={28} style={[style]} {...rest} />;
 }
 
+export function HeaderLeft() {
+  return (
+    <Pressable style={styles.iconStyle} onPress={() => router.back()}>
+      <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
+    </Pressable>
+  );
+}
+
 function RootLayoutNav() {
   return (
     <Provider store={store}>
       <View style={{ backgroundColor: "black", flex: 1 }}>
-        <Stack>
+        <Stack screenOptions={{ headerLeft: () => <HeaderLeft /> }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
           <Stack.Screen
@@ -71,14 +79,6 @@ function RootLayoutNav() {
               headerShown: true,
               headerTransparent: true,
               title: "",
-              headerLeft: () => (
-                <Pressable
-                  style={{ ...styles.iconStyle, marginHorizontal: 0 }}
-                  onPress={() => router.back()}
-                >
-                  <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-                </Pressable>
-              ),
             }}
           />
         </Stack>

@@ -1,10 +1,11 @@
 import Colors from "@/shared/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { Tabs, router } from "expo-router";
+import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { ComponentProps } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { HeaderLeft } from "../_layout";
 
 function TabBarIcon({
   style,
@@ -26,11 +27,7 @@ export default function TabLayout() {
           headerTitleAlign: "center",
           headerTitleStyle: { color: "#fff" },
           headerTransparent: true,
-          headerLeft: () => (
-            <Pressable style={styles.iconStyle} onPress={() => router.back()}>
-              <TabBarIcon size={18} name={"chevron-back"} color={"#fff"} />
-            </Pressable>
-          ),
+          headerLeft: () => <HeaderLeft />,
           headerRight: () => (
             <View style={styles.iconStyle}>
               <TabBarIcon size={18} name={"person-outline"} color={"#fff"} />
