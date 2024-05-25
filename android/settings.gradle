@@ -1,4 +1,4 @@
-rootProject.name = 'oh-movies'
+rootProject.name = 'Oh Movies!'
 
 dependencyResolutionManagement {
   versionCatalogs {
