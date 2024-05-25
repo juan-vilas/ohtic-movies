@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   marginBottomView: {

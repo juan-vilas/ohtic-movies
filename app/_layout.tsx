@@ -72,20 +72,16 @@ function RootLayoutNav() {
         <Stack
           screenOptions={{
             headerLeft: () => <HeaderLeft />,
+            headerShown: false,
           }}
         >
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
+          <Stack.Screen name="(tabs)" options={{}} />
           <Stack.Screen
             name="signup"
             options={{
               presentation: "modal",
-              headerShown: true,
               headerTransparent: true,
+              headerShown: true,
               title: "",
             }}
           />
@@ -93,7 +89,6 @@ function RootLayoutNav() {
             name="details/[data]"
             options={{
               presentation: "modal",
-              headerShown: true,
               headerTransparent: true,
               title: "",
             }}
