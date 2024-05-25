@@ -111,7 +111,7 @@ const Movie3DCase = ({
               >
                 <Ionicons name="star" color={"gold"} size={14} />
                 <Text style={{ color: "white" }}>
-                  {data.vote_average.toFixed(2)}
+                  {!!data.vote_average ? data.vote_average.toFixed(2) : ""}
                 </Text>
               </View>
               <Text style={{ color: "white" }}>
