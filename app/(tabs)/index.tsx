@@ -1,12 +1,12 @@
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
 import FiltersMenu, { Filter } from "@/components/FiltersMenu";
 import MovieShelf from "@/components/MovieShelf";
+import ThemedView from "@/components/ThemedView";
 import * as movieAPI from "@/shared/apis/MovieAPI";
 import { RootState } from "@/shared/redux/store";
 import { addMedia } from "@/shared/redux/trending";
 import { getStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
-import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -40,10 +40,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={["#262A32", "#171B20", "#0B0F14"]}
-      style={styles.background}
-    >
+    <ThemedView>
       <FlashList
         data={[...trending[filter].results]}
         onEndReachedThreshold={0.3}
@@ -64,7 +61,7 @@ export default function HomeScreen() {
           return <MovieShelf data={item} height={220} />;
         }}
       />
-    </LinearGradient>
+    </ThemedView>
   );
 }
 

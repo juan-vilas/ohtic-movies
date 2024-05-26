@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { LinearGradient } from "expo-linear-gradient";
+import ThemedView from "@/components/ThemedView";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -98,10 +98,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={["#262A32", "#171B20", "#0B0F14"]}
-      style={styles.background}
-    >
+    <ThemedView>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -165,7 +162,7 @@ export default function SignupScreen() {
           </>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </ThemedView>
   );
 }
 

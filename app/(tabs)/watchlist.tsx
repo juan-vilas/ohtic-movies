@@ -1,9 +1,9 @@
 import { styles as tabStyles } from "@/app/(tabs)/_layout";
 import FiltersMenu, { Filter } from "@/components/FiltersMenu";
 import MovieShelf from "@/components/MovieShelf";
+import ThemedView from "@/components/ThemedView";
 import { RootState } from "@/shared/redux/store";
 import { FlashList } from "@shopify/flash-list";
-import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import {
   Dimensions,
@@ -21,10 +21,7 @@ export default function WatchListScreen() {
   const [filter, setFilter] = useState<Filter>("all");
 
   return (
-    <LinearGradient
-      colors={["#262A32", "#171B20", "#0B0F14"]}
-      style={styles.background}
-    >
+    <ThemedView>
       <FlashList
         data={watchList[filter].results}
         onEndReachedThreshold={0.3}
@@ -45,7 +42,7 @@ export default function WatchListScreen() {
           <Text style={styles.text}>Nothing here... 👻</Text>
         )}
       />
-    </LinearGradient>
+    </ThemedView>
   );
 }
 
