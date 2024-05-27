@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 
 /**
  * @interface Props
@@ -13,6 +13,7 @@ interface Props {
   children?: any;
   onPress: () => void;
   alignSelf?: boolean;
+  _styles?: ViewStyle;
 }
 
 /**
@@ -23,11 +24,12 @@ export default function Button({
   children,
   onPress,
   alignSelf = true,
+  _styles = {},
 }: Props) {
   return (
     <Pressable
-      style={
-        selected
+      style={{
+        ...(selected
           ? {
               ...styles.selected,
               alignSelf: alignSelf ? "flex-start" : "auto",
@@ -35,8 +37,9 @@ export default function Button({
           : {
               paddingVertical: 14,
               paddingHorizontal: 36,
-            }
-      }
+            }),
+        ..._styles,
+      }}
       onPress={onPress}
     >
       <Text
@@ -46,7 +49,7 @@ export default function Button({
             : styles.notSelectedText
         }
       >
-        {children?.toString()}
+        {children}
       </Text>
     </Pressable>
   );

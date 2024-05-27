@@ -168,13 +168,13 @@ export default function ShowPage() {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              style={{ marginHorizontal: -24 }}
+              style={styles.castingContainer}
             >
               {credits.cast.map((el, index) => {
                 return (
                   <View
                     style={{
-                      ...styles.castingContainer,
+                      ...styles.castingDetails,
                       marginLeft: index === 0 ? 12 : 0,
                     }}
                   >
@@ -269,6 +269,7 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 100,
   },
-  castingContainer: { marginRight: 12, width: 130 },
+  castingDetails: { marginRight: 12, width: 130 },
   castingImage: { borderRadius: 10, width: 130, height: 130 },
+  castingContainer: { marginHorizontal: -24 },
 });

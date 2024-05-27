@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import Button from "./Button";
@@ -28,6 +29,9 @@ export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
     <>
       <View style={styles.marginTopView}></View>
       <View style={styles.filterContainer}>
+        <Button _styles={{ paddingHorizontal: 12 }} onPress={() => {}}>
+          <Ionicons name="search" size={18} />
+        </Button>
         <Button onPress={() => setFilter("all")} selected={filter === "all"}>
           All
         </Button>
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 46,
     padding: 8,
+    marginHorizontal: "auto",
   },
 });
