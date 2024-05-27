@@ -1,6 +1,7 @@
 import { Filter } from "@/components/FiltersMenu";
 import { getLocales } from "react-native-localize";
 import { MovieCast } from "../interfaces/casting";
+import { GenresResult } from "../interfaces/genres";
 import { MediaData, Trending } from "../interfaces/trending";
 import { Videos } from "../interfaces/videos";
 
@@ -68,6 +69,23 @@ export const search = async (
     options
   );
   const json: Trending = await response.json();
+  return json;
+};
+
+/**
+ * Gets the genres for a specific media type
+ *
+ * @param {MediaData["media_type"]} mediaType
+ * @return {*}  {Promise<GenresResult>}
+ */
+export const getGenres = async (
+  mediaType: MediaData["media_type"]
+): Promise<GenresResult> => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/genre/${mediaType}/list`,
+    options
+  );
+  const json: GenresResult = await response.json();
   return json;
 };
 

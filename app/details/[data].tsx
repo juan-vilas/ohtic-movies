@@ -1,9 +1,12 @@
 import Button from "@/components/Button";
+import Chip from "@/components/Chip";
 import { Filter } from "@/components/FiltersMenu";
 import Movie3DCase from "@/components/Movie3DCover";
+import * as movieAPI from "@/shared/apis/MovieAPI";
 import { getCredits, getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
 import { MovieCast } from "@/shared/interfaces/casting";
+import { Genre } from "@/shared/interfaces/genres";
 import { MediaData, MediaPosition } from "@/shared/interfaces/trending";
 import { RootState } from "@/shared/redux/store";
 import { findMediaPosition } from "@/shared/redux/utils";
@@ -34,6 +37,7 @@ export default function ShowPage() {
   const [isTrailerReady, setTrailerIsReady] = useState<boolean>(
     Platform.OS === "web"
   );
+  const [genres, setGenres] = useState<Genre[]>();
 
   const getTrailerHeight = () => {
     const windowWidth = Dimensions.get("window").width;
@@ -60,6 +64,10 @@ export default function ShowPage() {
 
     getCredits(result.id, result.media_type).then((credits) => {
       setCredits(credits);
+    });
+
+    movieAPI.getGenres(result.media_type).then((genresResult) => {
+      setGenres(genresResult.genres);
     });
 
     return () => {
@@ -131,6 +139,16 @@ export default function ShowPage() {
                 .substring(4)}
             </Text>
           </View>
+
+          {!!genres ? (
+            <View style={styles.chipContainer}>
+              {result.genre_ids.map((el) => {
+                const name = genres.find((value) => value.id === el)?.name;
+                return <Chip>{name}</Chip>;
+              })}
+            </View>
+          ) : null}
+
           <Text style={styles.secondaryText}>{result.overview}</Text>
 
           <Button
@@ -272,4 +290,5 @@ const styles = StyleSheet.create({
   castingDetails: { marginRight: 12, width: 130 },
   castingImage: { borderRadius: 10, width: 130, height: 130 },
   castingContainer: { marginHorizontal: -24 },
+  chipContainer: { flexDirection: "row", flexWrap: "wrap", gap: 4 },
 });
