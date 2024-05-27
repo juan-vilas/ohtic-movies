@@ -88,8 +88,10 @@ function RootLayoutNav() {
           <Stack.Screen
             name="details/[data]"
             options={{
-              presentation: "modal",
+              headerLeft: () => <HeaderLeft />,
               headerTransparent: true,
+              headerShown: true,
+              presentation: "modal",
               title: "",
             }}
           />

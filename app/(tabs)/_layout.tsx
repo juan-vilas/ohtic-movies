@@ -42,7 +42,7 @@ export default function TabLayout() {
           name="index"
           options={{
             headerLeft: () => null,
-            title: "Ohtic!",
+            title: "Trending",
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon
                 size={24}

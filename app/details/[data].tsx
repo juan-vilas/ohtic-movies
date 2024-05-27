@@ -126,13 +126,13 @@ export default function ShowPage() {
         <View style={{ ...styles.section, borderTopWidth: 0 }}>
           <View>
             <Text style={styles.title}>{result.title || result.name}</Text>
-            <Text style={styles.date}>
+            <Text style={styles.secondaryText}>
               {new Date(result.release_date || result.first_air_date || "")
                 .toDateString()
                 .substring(4)}
             </Text>
           </View>
-          <Text style={styles.date}>{result.overview}</Text>
+          <Text style={styles.secondaryText}>{result.overview}</Text>
 
           <Button
             selected
@@ -165,18 +165,27 @@ export default function ShowPage() {
         {credits.cast.length === 0 ? null : (
           <View style={styles.section}>
             <Text style={styles.title}>Cast</Text>
-            <ScrollView horizontal>
-              {credits.cast.map((el) => {
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ marginHorizontal: -24 }}
+            >
+              {credits.cast.map((el, index) => {
                 return (
-                  <View style={styles.castingContainer}>
+                  <View
+                    style={{
+                      ...styles.castingContainer,
+                      marginLeft: index === 0 ? 12 : 0,
+                    }}
+                  >
                     <FastImage
                       source={{
                         uri: CoverURL + el.profile_path,
                       }}
                       style={styles.castingImage}
                     />
-                    <Text style={styles.detailsText}>{el.name}</Text>
-                    <Text style={styles.date}>{el.character}</Text>
+                    <Text style={styles.primaryText}>{el.name}</Text>
+                    <Text style={styles.secondaryText}>{el.character}</Text>
                   </View>
                 );
               })}
@@ -239,7 +248,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 24,
   },
-  detailsText: { color: "white" },
+  primaryText: { color: "white" },
   section: {
     borderTopColor: "#1C1F25",
     borderTopWidth: 2,
@@ -248,7 +257,7 @@ const styles = StyleSheet.create({
     rowGap: 10,
   },
   title: { color: "white", fontSize: 20, fontWeight: "bold" },
-  date: { color: "#959595", fontWeight: "semibold" },
+  secondaryText: { color: "#959595", fontWeight: "semibold" },
   rate: { color: "white", fontWeight: "bold" },
   player: {
     borderRadius: 14,
