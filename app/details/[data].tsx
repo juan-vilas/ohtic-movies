@@ -20,7 +20,6 @@ import {
   Text,
   View,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -177,8 +176,9 @@ export default function ShowPage() {
                       ...styles.castingDetails,
                       marginLeft: index === 0 ? 12 : 0,
                     }}
+                    key={el.cast_id.toString()}
                   >
-                    <FastImage
+                    <Image
                       source={{
                         uri: CoverURL + el.profile_path,
                       }}
