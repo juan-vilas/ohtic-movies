@@ -5,9 +5,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import hexToRgba from "hex-to-rgba";
 import React, { useEffect, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import * as Animatable from "react-native-animatable";
-import FastImage from "react-native-fast-image";
 import { getColors } from "react-native-image-colors";
 
 /**
@@ -40,6 +39,7 @@ const Movie3DCase = ({
   data,
 }: Props) => {
   const [dominantColor, setColors] = useState<string>("#000");
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [colorsLoaded, setColorsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -54,6 +54,9 @@ const Movie3DCase = ({
       }
       setColorsLoaded(true);
     });
+    Image.prefetch(CoverURL + data.poster_path).then((value) =>
+      setLoaded(true)
+    );
   }, []);
 
   return !data.poster_path ? null : (
@@ -78,10 +81,12 @@ const Movie3DCase = ({
             animation={animation ? "fadeIn" : undefined}
             style={styles.container}
           >
-            <FastImage
+            <Image
               source={{
                 uri: CoverURL + data.poster_path,
               }}
+              onLoad={() => setLoaded(true)}
+              fadeDuration={0}
               style={{
                 ...styles.image,
                 transform: [{ skewY: "0deg" }],
