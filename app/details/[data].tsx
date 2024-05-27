@@ -1,8 +1,9 @@
 import Button from "@/components/Button";
 import { Filter } from "@/components/FiltersMenu";
 import Movie3DCase from "@/components/Movie3DCover";
-import { getVideos } from "@/shared/apis/MovieAPI";
+import { getCredits, getVideos } from "@/shared/apis/MovieAPI";
 import CoverURL from "@/shared/constants/CoverURL";
+import { MovieCast } from "@/shared/interfaces/casting";
 import { MediaData, MediaPosition } from "@/shared/interfaces/trending";
 import { RootState } from "@/shared/redux/store";
 import { findMediaPosition } from "@/shared/redux/utils";
@@ -19,6 +20,7 @@ import {
   Text,
   View,
 } from "react-native";
+import FastImage from "react-native-fast-image";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -41,14 +43,24 @@ export default function ShowPage() {
   };
 
   const [trailerHeight, setTrailerHeight] = useState<number>(0);
+  const [credits, setCredits] = useState<MovieCast>({
+    id: -1,
+    cast: [],
+    crew: [],
+  });
 
   useEffect(() => {
     // Parse query data
-    setResult(JSON.parse(data));
+    const result: MediaData = JSON.parse(data);
+    setResult(result);
 
     setTrailerHeight(getTrailerHeight());
     const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setTrailerHeight(getTrailerHeight());
+    });
+
+    getCredits(result.id, result.media_type).then((credits) => {
+      setCredits(credits);
     });
 
     return () => {
@@ -150,6 +162,28 @@ export default function ShowPage() {
           </Button>
         </View>
 
+        {credits.cast.length === 0 ? null : (
+          <View style={styles.section}>
+            <Text style={styles.title}>Cast</Text>
+            <ScrollView horizontal>
+              {credits.cast.map((el) => {
+                return (
+                  <View style={styles.castingContainer}>
+                    <FastImage
+                      source={{
+                        uri: CoverURL + el.profile_path,
+                      }}
+                      style={styles.castingImage}
+                    />
+                    <Text style={styles.detailsText}>{el.name}</Text>
+                    <Text style={styles.date}>{el.character}</Text>
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
+
         {trailerId ? (
           <View>
             <View style={styles.section}>
@@ -226,4 +260,6 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 100,
   },
+  castingContainer: { marginRight: 12, width: 130 },
+  castingImage: { borderRadius: 10, width: 130, height: 130 },
 });

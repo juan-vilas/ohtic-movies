@@ -1,6 +1,7 @@
 import { Filter } from "@/components/FiltersMenu";
 import { getLocales } from "react-native-localize";
-import { Trending } from "../interfaces/trending";
+import { MovieCast } from "../interfaces/casting";
+import { MediaData, Trending } from "../interfaces/trending";
 import { Videos } from "../interfaces/videos";
 
 const localeTag = getLocales()[0].languageTag;
@@ -29,6 +30,25 @@ export const getTrendingShows = async (
     options
   );
   const json: Trending = await response.json();
+  return json;
+};
+
+/**
+ * Gets the casting for a show
+ *
+ * @param {number} mediaId
+ * @param {MovieCast["media_type"]} mediaType
+ * @return {*}  {Promise<MovieCast>}
+ */
+export const getCredits = async (
+  mediaId: number,
+  mediaType: MediaData["media_type"]
+): Promise<MovieCast> => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/${mediaType}/${mediaId}/credits`,
+    options
+  );
+  const json: MovieCast = await response.json();
   return json;
 };
 
