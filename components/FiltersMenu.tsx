@@ -1,29 +1,42 @@
+import { search } from "@/shared/apis/MovieAPI";
+import { addMedia, clearMedia } from "@/shared/redux/trending";
+import { sleep } from "@/shared/redux/utils";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { useDispatch } from "react-redux";
 import Button from "./Button";
 import Input from "./Input";
 
 export type Filter = "all" | "movie" | "tv";
-export type FilterWitchSearch = Filter | "search";
+export type FilterWithSearch = Filter | "search";
 
 /**
  * @interface Props
  * @property {Filter} defaultFilter - Default filter to be shown selected
- * @property {(filter:Filter) => void} currentFilter - Callback that returns the current filter
+ * @property {(filter:FilterWithSearch) => void} currentFilter - Callback that returns the current filter
+ * @property {(filter:FilterWithSearch) => void} currentFilter - Callback that returns the current filter
  */
 interface Props {
   defaultFilter: Filter;
   currentFilter: (filter: Filter) => void;
+  isCurrentlySearching: (isSearching: boolean) => void;
 }
 
 /**
  * Shows a filter menu
  */
-export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
+export default function FiltersMenu({
+  defaultFilter,
+  currentFilter,
+  isCurrentlySearching,
+}: Props) {
+  const dispatch = useDispatch();
+
   const [filter, setFilter] = useState<Filter>(defaultFilter);
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
   const [transitionWidth, setTransitionWidth] = useState<number>(
     Dimensions.get("window").width * 0.9
   );
@@ -32,7 +45,29 @@ export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
     setTransitionWidth(
       isSearching ? 245 : Dimensions.get("window").width * 0.9
     );
+
+    isCurrentlySearching(isSearching);
   }, [isSearching]);
+
+  useEffect(() => {
+    if (query === "") return;
+
+    const clearId = setTimeout(async () => {
+      dispatch(clearMedia({ filter: "all" }));
+      let searchResponse = await search(query, 1);
+      dispatch(addMedia({ trending: searchResponse, filter: "all" }));
+
+      for (var i = 2; i < searchResponse.total_pages; i++) {
+        await sleep(1000);
+        searchResponse = await search(query, i + 1);
+        dispatch(addMedia({ trending: searchResponse, filter: "all" }));
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(clearId);
+    };
+  }, [query]);
 
   useEffect(() => {
     currentFilter(filter);
@@ -75,6 +110,7 @@ export default function FiltersMenu({ defaultFilter, currentFilter }: Props) {
               placeholder: "Search...",
               autoFocus: true,
               onBlur: () => setIsSearching(false),
+              onChangeText: (text) => setQuery(text),
             }}
             _styles={{ width: "100%", paddingRight: 12 }}
           />

@@ -5,6 +5,7 @@ import ThemedView from "@/components/ThemedView";
 import * as movieAPI from "@/shared/apis/MovieAPI";
 import { RootState } from "@/shared/redux/store";
 import { addMedia } from "@/shared/redux/trending";
+import { sleep } from "@/shared/redux/utils";
 import { getStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
 import { useEffect, useState } from "react";
@@ -22,41 +23,60 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState<Filter>("all");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [fetchedInitialPages, setFetchedInitialPages] =
+    useState<boolean>(false);
 
   useEffect(() => {
     dispatch(getStorage() as any);
+    // Fetch first 4 trengding pages on initialization
+    fetchPages(4);
   }, []);
 
   const fetchPages = async (pages: number) => {
+    if (isSearching) return;
+
+    const initialPage = trending[filter].page + 1;
+    let trendingResponse = await movieAPI.getTrendingShows(initialPage, filter);
+    dispatch(addMedia({ trending: trendingResponse, filter }));
+
     const maxPages = Math.min(
-      trending[filter].total_pages | 10,
+      trendingResponse.total_pages,
       trending[filter].page + pages
     );
-    const _pages = trending[filter].page + 1;
-    for (var i = _pages; i <= maxPages; i++) {
-      const response = await movieAPI.getTrendingShows(i, filter);
-      dispatch(addMedia({ trending: response, filter }));
+
+    for (var i = initialPage + 1; i <= maxPages; i++) {
+      await sleep(1000);
+      trendingResponse = await movieAPI.getTrendingShows(i, filter);
+      dispatch(addMedia({ trending: trendingResponse, filter }));
+    }
+
+    if (!fetchedInitialPages) {
+      setFetchedInitialPages(true);
     }
   };
 
   return (
     <ThemedView>
+      <FiltersMenu
+        defaultFilter={filter}
+        currentFilter={(filter) => {
+          setFilter(filter);
+        }}
+        isCurrentlySearching={(isSearching) => {
+          setIsSearching(isSearching);
+        }}
+      />
       <FlashList
         data={[...trending[filter].results]}
         onEndReachedThreshold={0.3}
         estimatedItemSize={716}
-        ListHeaderComponent={() => (
-          <FiltersMenu
-            defaultFilter={filter}
-            currentFilter={(filter) => {
-              setFilter(filter);
-            }}
-          />
-        )}
         ListFooterComponent={() => (
           <View style={styles.marginBottomView}></View>
         )}
-        onEndReached={() => fetchPages(3)}
+        onEndReached={() => {
+          if (fetchedInitialPages) fetchPages(3);
+        }}
         renderItem={({ item }) => {
           return <MovieShelf data={item} height={220} />;
         }}

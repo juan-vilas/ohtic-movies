@@ -53,6 +53,25 @@ export const getCredits = async (
 };
 
 /**
+ * Search for movies and TV shows in a single request.
+ *
+ * @param {string} query
+ * @param {number} page
+ * @return {*}  {Promise<Trending>}
+ */
+export const search = async (
+  query: string,
+  page: number
+): Promise<Trending> => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/search/multi?query=${query}&page=${page}&language=${localeTag}`,
+    options
+  );
+  const json: Trending = await response.json();
+  return json;
+};
+
+/**
  * Gets trailers/teasers from the shows
  *
  * @param {number} movieId

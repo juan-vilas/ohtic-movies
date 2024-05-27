@@ -176,7 +176,7 @@ export default function ShowPage() {
                       ...styles.castingDetails,
                       marginLeft: index === 0 ? 12 : 0,
                     }}
-                    key={el.cast_id.toString()}
+                    key={index}
                   >
                     <Image
                       source={{

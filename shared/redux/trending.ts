@@ -40,16 +40,39 @@ const trendingSlice = createSlice({
      */
     addMedia: (
       state: TrendingState,
-      action: PayloadAction<{ trending: Trending; filter: Filter }>
+      action: PayloadAction<{
+        trending: Trending;
+        filter: Filter;
+      }>
     ) => {
       if (action.payload.trending.page > state[action.payload.filter].page) {
         pushMediaList(state, action);
       }
     },
+    /**
+     * Reducer function to clear media state.
+
+     * @param {TrendingState} state - The current trending state.
+     * @param {PayloadAction<{ filter: Filter }>} action - The action containing the filter to clear.
+     */
+    clearMedia: (
+      state: TrendingState,
+      action: PayloadAction<{
+        filter: Filter;
+      }>
+    ) => {
+      state[action.payload.filter] = {
+        page: 0,
+        results: [],
+        total_pages: 0,
+        total_results: 0,
+      };
+      return state;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addMedia } = trendingSlice.actions;
+export const { addMedia, clearMedia } = trendingSlice.actions;
 
 export default trendingSlice.reducer;
