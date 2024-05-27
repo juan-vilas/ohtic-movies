@@ -16,12 +16,14 @@ export type FilterWithSearch = Filter | "search";
  * @interface Props
  * @property {Filter} defaultFilter - Default filter to be shown selected
  * @property {(filter:FilterWithSearch) => void} currentFilter - Callback that returns the current filter
- * @property {(filter:FilterWithSearch) => void} currentFilter - Callback that returns the current filter
+ * @property {(isSearching:boolean) => void} isCurrentlySearching - Callback that returns if is searching
+ * @property {boolean} showSearch - Show/hide search
  */
 interface Props {
   defaultFilter: Filter;
   currentFilter: (filter: Filter) => void;
-  isCurrentlySearching: (isSearching: boolean) => void;
+  isCurrentlySearching?: (isSearching: boolean) => void;
+  showSearch?: boolean;
 }
 
 /**
@@ -30,7 +32,8 @@ interface Props {
 export default function FiltersMenu({
   defaultFilter,
   currentFilter,
-  isCurrentlySearching,
+  isCurrentlySearching = () => {},
+  showSearch = true,
 }: Props) {
   const dispatch = useDispatch();
 
@@ -53,14 +56,14 @@ export default function FiltersMenu({
     if (query === "") return;
 
     const clearId = setTimeout(async () => {
-      dispatch(clearMedia({ filter: "all" }));
+      dispatch(clearMedia({ filter }));
       let searchResponse = await search(query, 1);
-      dispatch(addMedia({ trending: searchResponse, filter: "all" }));
+      dispatch(addMedia({ trending: searchResponse, filter }));
 
       for (var i = 2; i < searchResponse.total_pages; i++) {
         await sleep(1000);
         searchResponse = await search(query, i + 1);
-        dispatch(addMedia({ trending: searchResponse, filter: "all" }));
+        dispatch(addMedia({ trending: searchResponse, filter }));
       }
     }, 1000);
 
@@ -79,12 +82,14 @@ export default function FiltersMenu({
       transition={"width"}
     >
       <View style={styles.container}>
-        <Button
-          onPress={() => setIsSearching(true)}
-          _styles={styles.searchButton}
-        >
-          <Ionicons name="search" size={18} />
-        </Button>
+        {showSearch ? (
+          <Button
+            onPress={() => setIsSearching(true)}
+            _styles={styles.searchButton}
+          >
+            <Ionicons name="search" size={18} />
+          </Button>
+        ) : null}
         {!isSearching ? (
           <>
             <Button
@@ -104,16 +109,29 @@ export default function FiltersMenu({
             </Button>
           </>
         ) : (
-          <Input
-            variant="secondary"
-            textInputConfig={{
-              placeholder: "Search...",
-              autoFocus: true,
-              onBlur: () => setIsSearching(false),
-              onChangeText: (text) => setQuery(text),
-            }}
-            _styles={{ width: "100%", paddingRight: 12 }}
-          />
+          <>
+            <Input
+              variant="secondary"
+              textInputConfig={{
+                placeholder: "Search...",
+                autoFocus: true,
+                onBlur: () => setIsSearching(false),
+                onChangeText: (text) => setQuery(text),
+              }}
+              _styles={{ width: "100%", paddingRight: 12 }}
+            />
+            <Ionicons
+              name="close"
+              size={18}
+              color={"#949599"}
+              style={{ paddingRight: 12 }}
+              onPress={() => {
+                console.log("clearing");
+                setIsSearching(false);
+                dispatch(clearMedia({ filter }));
+              }}
+            />
+          </>
         )}
       </View>
     </Animatable.View>

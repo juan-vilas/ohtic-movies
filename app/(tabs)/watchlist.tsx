@@ -28,6 +28,7 @@ export default function WatchListScreen() {
         estimatedItemSize={716}
         ListHeaderComponent={() => (
           <FiltersMenu
+            showSearch={false}
             defaultFilter={filter}
             currentFilter={(filter) => {
               setFilter(filter);

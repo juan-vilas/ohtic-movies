@@ -34,8 +34,6 @@ export default function HomeScreen() {
   }, []);
 
   const fetchPages = async (pages: number) => {
-    if (isSearching) return;
-
     const initialPage = trending[filter].page + 1;
     let trendingResponse = await movieAPI.getTrendingShows(initialPage, filter);
     dispatch(addMedia({ trending: trendingResponse, filter }));
@@ -65,6 +63,9 @@ export default function HomeScreen() {
         }}
         isCurrentlySearching={(isSearching) => {
           setIsSearching(isSearching);
+          if (!isSearching) {
+            fetchPages(3);
+          }
         }}
       />
       <FlashList
@@ -75,7 +76,7 @@ export default function HomeScreen() {
           <View style={styles.marginBottomView}></View>
         )}
         onEndReached={() => {
-          if (fetchedInitialPages) fetchPages(3);
+          if (fetchedInitialPages && !isSearching) fetchPages(3);
         }}
         renderItem={({ item }) => {
           return <MovieShelf data={item} height={220} />;
