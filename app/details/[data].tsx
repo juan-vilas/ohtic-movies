@@ -142,9 +142,9 @@ export default function ShowPage() {
 
           {!!genres ? (
             <View style={styles.chipContainer}>
-              {result.genre_ids.map((el) => {
+              {result.genre_ids.map((el, index) => {
                 const name = genres.find((value) => value.id === el)?.name;
-                return <Chip>{name}</Chip>;
+                return <Chip key={index}>{name}</Chip>;
               })}
             </View>
           ) : null}
