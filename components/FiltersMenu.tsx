@@ -3,7 +3,7 @@ import { addMedia, clearMedia } from "@/shared/redux/trending";
 import { sleep } from "@/shared/redux/utils";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { Dimensions, Keyboard, Platform, StyleSheet, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { useDispatch } from "react-redux";
 import Button from "./Button";
@@ -56,6 +56,8 @@ export default function FiltersMenu({
     if (query === "") return;
 
     const clearId = setTimeout(async () => {
+      Keyboard.dismiss();
+
       dispatch(clearMedia({ filter }));
       let searchResponse = await search(query, 1);
       dispatch(addMedia({ trending: searchResponse, filter }));
