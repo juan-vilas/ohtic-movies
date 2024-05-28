@@ -54,22 +54,13 @@ export default function HomeScreen() {
     }
   };
 
+  const [first, setfirst] = useState(true);
+
   return (
     <ThemedView>
-      <FiltersMenu
-        defaultFilter={filter}
-        currentFilter={(filter) => {
-          setFilter(filter);
-        }}
-        isCurrentlySearching={(isSearching) => {
-          setIsSearching(isSearching);
-          if (!isSearching) {
-            fetchPages(3);
-          }
-        }}
-      />
       <FlashList
-        data={[...trending[filter].results]}
+        onScroll={() => setfirst(false)}
+        data={[[], ...trending[filter].results]}
         onEndReachedThreshold={0.3}
         estimatedItemSize={716}
         ListFooterComponent={() => (
@@ -78,7 +69,22 @@ export default function HomeScreen() {
         onEndReached={() => {
           if (fetchedInitialPages && !isSearching) fetchPages(3);
         }}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
+          if (index === 0)
+            return (
+              <FiltersMenu
+                defaultFilter={filter}
+                currentFilter={(filter) => {
+                  setFilter(filter);
+                }}
+                isCurrentlySearching={(isSearching) => {
+                  setIsSearching(isSearching);
+                  if (!isSearching) {
+                    fetchPages(3);
+                  }
+                }}
+              />
+            );
           return <MovieShelf data={item} height={220} />;
         }}
       />
