@@ -64,7 +64,7 @@ export default function FiltersMenu({
 
       for (var i = 2; i < searchResponse.total_pages; i++) {
         await sleep(1000);
-        searchResponse = await search(query, i + 1);
+        searchResponse = await search(query, i);
         dispatch(addMedia({ trending: searchResponse, filter }));
       }
     }, 1000);
@@ -121,6 +121,7 @@ export default function FiltersMenu({
                 placeholder: "Search...",
                 autoFocus: true,
                 onChangeText: (text) => setQuery(text),
+                onSubmitEditing: () => setIsSearching(true),
               }}
               _styles={{ width: "100%", paddingRight: 12 }}
             />
@@ -130,7 +131,6 @@ export default function FiltersMenu({
               color={"#949599"}
               style={{ paddingRight: 12 }}
               onPress={() => {
-                console.log("clearing");
                 setIsSearching(false);
                 dispatch(clearMedia({ filter }));
               }}
