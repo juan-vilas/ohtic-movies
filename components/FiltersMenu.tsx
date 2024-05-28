@@ -94,17 +94,20 @@ export default function FiltersMenu({
           <>
             <Button
               onPress={() => setFilter("all")}
-              selected={filter === "all"}
+              selected={!isSearching && filter === "all"}
             >
               All
             </Button>
             <Button
               onPress={() => setFilter("movie")}
-              selected={filter === "movie"}
+              selected={!isSearching && filter === "movie"}
             >
               Movies
             </Button>
-            <Button onPress={() => setFilter("tv")} selected={filter === "tv"}>
+            <Button
+              onPress={() => setFilter("tv")}
+              selected={!isSearching && filter === "tv"}
+            >
               TV
             </Button>
           </>
@@ -115,7 +118,6 @@ export default function FiltersMenu({
               textInputConfig={{
                 placeholder: "Search...",
                 autoFocus: true,
-                onBlur: () => setIsSearching(false),
                 onChangeText: (text) => setQuery(text),
               }}
               _styles={{ width: "100%", paddingRight: 12 }}
