@@ -8,12 +8,14 @@ import { addMedia } from "@/shared/redux/trending";
 import { sleep } from "@/shared/redux/utils";
 import { getStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
+import * as Device from "expo-device";
 import { useEffect, useState } from "react";
 import {
   Dimensions,
   Platform,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,36 +60,42 @@ export default function HomeScreen() {
 
   return (
     <ThemedView>
-      <FlashList
-        onScroll={() => setfirst(false)}
-        data={[[], ...trending[filter].results]}
-        onEndReachedThreshold={0.3}
-        estimatedItemSize={716}
-        ListFooterComponent={() => (
-          <View style={styles.marginBottomView}></View>
-        )}
-        onEndReached={() => {
-          if (fetchedInitialPages && !isSearching) fetchPages(3);
-        }}
-        renderItem={({ item, index }) => {
-          if (index === 0)
-            return (
-              <FiltersMenu
-                defaultFilter={filter}
-                currentFilter={(filter) => {
-                  setFilter(filter);
-                }}
-                isCurrentlySearching={(isSearching) => {
-                  setIsSearching(isSearching);
-                  if (!isSearching) {
-                    fetchPages(3);
-                  }
-                }}
-              />
-            );
-          return <MovieShelf data={item} height={220} />;
-        }}
-      />
+      {!/Android|iOS|iPadOS/.test(Device.osName || "") ? (
+        <Text style={styles.phoneText}>
+          Please visit the site with a mobile device
+        </Text>
+      ) : (
+        <FlashList
+          onScroll={() => setfirst(false)}
+          data={[[], ...trending[filter].results]}
+          onEndReachedThreshold={0.3}
+          estimatedItemSize={716}
+          ListFooterComponent={() => (
+            <View style={styles.marginBottomView}></View>
+          )}
+          onEndReached={() => {
+            if (fetchedInitialPages && !isSearching) fetchPages(3);
+          }}
+          renderItem={({ item, index }) => {
+            if (index === 0)
+              return (
+                <FiltersMenu
+                  defaultFilter={filter}
+                  currentFilter={(filter) => {
+                    setFilter(filter);
+                  }}
+                  isCurrentlySearching={(isSearching) => {
+                    setIsSearching(isSearching);
+                    if (!isSearching) {
+                      fetchPages(3);
+                    }
+                  }}
+                />
+              );
+            return <MovieShelf data={item} height={220} />;
+          }}
+        />
+      )}
     </ThemedView>
   );
 }
@@ -116,5 +124,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 46,
     padding: 8,
+  },
+  phoneText: {
+    marginVertical: "auto",
+    marginHorizontal: "auto",
+    color: "white",
+    fontSize: 24,
   },
 });
