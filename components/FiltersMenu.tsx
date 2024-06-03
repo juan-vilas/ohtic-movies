@@ -1,5 +1,7 @@
 import { search } from "@/shared/apis/MovieAPI";
-import { addMedia, clearMedia } from "@/shared/redux/trending";
+import { Trending } from "@/shared/interfaces/trending";
+import { AppDispatch } from "@/shared/redux/store";
+import { clearMedia } from "@/shared/redux/trending";
 import { sleep } from "@/shared/redux/utils";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -35,7 +37,7 @@ export default function FiltersMenu({
   isCurrentlySearching = () => {},
   showSearch = true,
 }: Props) {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const [filter, setFilter] = useState<Filter>(defaultFilter);
   const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -59,13 +61,15 @@ export default function FiltersMenu({
       Keyboard.dismiss();
 
       dispatch(clearMedia({ filter }));
-      let searchResponse = await search(query, 1);
-      dispatch(addMedia({ trending: searchResponse, filter }));
+      await sleep(1000);
+
+      let searchResponse = (await dispatch(search({ query, page: 1 })))
+        .payload as Trending;
 
       for (var i = 2; i < searchResponse.total_pages; i++) {
         await sleep(1000);
-        searchResponse = await search(query, i);
-        dispatch(addMedia({ trending: searchResponse, filter }));
+        searchResponse = (await dispatch(search({ query, page: i })))
+          .payload as Trending;
       }
     }, 1000);
 

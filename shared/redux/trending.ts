@@ -1,7 +1,12 @@
 import { Filter } from "@/components/FiltersMenu";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getTrendingShows } from "../apis/MovieAPI";
-import { Trending, TrendingState } from "../interfaces/trending";
+import { PayloadAction, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import {
+  SearchParams,
+  TrendingShowsParams,
+  getTrendingShows,
+  search,
+} from "../apis/MovieAPI";
+import { TrendingState } from "../interfaces/trending";
 import { pushMediaList } from "./utils";
 
 /**
@@ -34,23 +39,6 @@ const trendingSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * Reducer function to add media to the trending state.
-
-     * @param {TrendingState} state - The current trending state.
-     * @param {PayloadAction<{ trending: Trending; filter: Filter }>} action - The action containing trending data.
-     */
-    addMedia: (
-      state: TrendingState,
-      action: PayloadAction<{
-        trending: Trending;
-        filter: Filter;
-      }>
-    ) => {
-      if (action.payload.trending.page > state[action.payload.filter].page) {
-        pushMediaList(state, action);
-      }
-    },
-    /**
      * Reducer function to clear media state.
 
      * @param {TrendingState} state - The current trending state.
@@ -72,19 +60,30 @@ const trendingSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getTrendingShows.fulfilled, (state, action) => {
-      const filter = action.meta.arg.filter;
-      if (action.payload.page > state[filter].page) {
-        pushMediaList(state, {
-          payload: { trending: action.payload, filter: filter },
-          type: action.type,
-        });
+    /**
+     * Reducer function to add media to the trending state.
+
+     * @param {TrendingState} state - The current trending state.
+     * @param {PayloadAction<TrendingShowsParams & SearchParams>} action - The action containing trending data.
+     */
+    builder.addMatcher(
+      isAnyOf(getTrendingShows.fulfilled, search.fulfilled),
+      (state, action) => {
+        const arg = action.meta.arg as TrendingShowsParams & SearchParams;
+        const filter = arg?.filter || "all";
+
+        if (action.payload.page > state[filter].page) {
+          pushMediaList(state, {
+            payload: { trending: action.payload, filter: filter },
+            type: action.type,
+          });
+        }
       }
-    });
+    );
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addMedia, clearMedia } = trendingSlice.actions;
+export const { clearMedia } = trendingSlice.actions;
 
 export default trendingSlice.reducer;

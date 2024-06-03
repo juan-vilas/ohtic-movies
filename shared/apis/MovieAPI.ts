@@ -16,11 +16,11 @@ const options = {
   },
 };
 
-interface TrendingShowsParams {
+// 'getTrendingShows' thunk params
+export interface TrendingShowsParams {
   page: number;
   filter: Filter;
 }
-
 /**
  * Gets the trending shows
  *
@@ -33,6 +33,30 @@ export const getTrendingShows = createAsyncThunk(
   async ({ page, filter }: TrendingShowsParams): Promise<Trending> => {
     const response = await fetch(
       `https://api.themoviedb.org/3/trending/${filter}/day?page=${page}&language=${localeTag}`,
+      options
+    );
+    const json: Trending = await response.json();
+    return json;
+  }
+);
+
+// 'search' thunk params
+export interface SearchParams {
+  query: string;
+  page: number;
+}
+/**
+ * Search for movies and TV shows in a single request.
+ *
+ * @param {string} query
+ * @param {number} page
+ * @return {*}  {Promise<Trending>}
+ */
+export const search = createAsyncThunk(
+  "trending/search",
+  async ({ query, page }: SearchParams) => {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/search/multi?query=${query}&page=${page}&language=${localeTag}`,
       options
     );
     const json: Trending = await response.json();
@@ -56,25 +80,6 @@ export const getCredits = async (
     options
   );
   const json: MovieCast = await response.json();
-  return json;
-};
-
-/**
- * Search for movies and TV shows in a single request.
- *
- * @param {string} query
- * @param {number} page
- * @return {*}  {Promise<Trending>}
- */
-export const search = async (
-  query: string,
-  page: number
-): Promise<Trending> => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/search/multi?query=${query}&page=${page}&language=${localeTag}`,
-    options
-  );
-  const json: Trending = await response.json();
   return json;
 };
 
