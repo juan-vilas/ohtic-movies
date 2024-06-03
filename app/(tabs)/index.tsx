@@ -3,10 +3,8 @@ import FiltersMenu, { Filter } from "@/components/FiltersMenu";
 import MovieShelf from "@/components/MovieShelf";
 import ThemedView from "@/components/ThemedView";
 import * as movieAPI from "@/shared/apis/MovieAPI";
-import { RootState } from "@/shared/redux/store";
-import { addMedia } from "@/shared/redux/trending";
-import { sleep } from "@/shared/redux/utils";
-import { getStorage } from "@/shared/redux/watchlist";
+import { AppDispatch, RootState } from "@/shared/redux/store";
+import { getWatchlistStorage } from "@/shared/redux/watchlist";
 import { FlashList } from "@shopify/flash-list";
 import * as Device from "expo-device";
 import { useEffect, useState } from "react";
@@ -22,41 +20,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeScreen() {
   const trending = useSelector((state: RootState) => state.trending);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const [filter, setFilter] = useState<Filter>("all");
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [fetchedInitialPages, setFetchedInitialPages] =
-    useState<boolean>(false);
 
   useEffect(() => {
-    dispatch(getStorage() as any);
-    // Fetch first 4 trengding pages on initialization
-    fetchPages(4);
+    dispatch(getWatchlistStorage() as any);
   }, []);
 
-  const fetchPages = async (pages: number) => {
+  const fetchPages = async () => {
     const initialPage = trending[filter].page + 1;
-    let trendingResponse = await movieAPI.getTrendingShows(initialPage, filter);
-    dispatch(addMedia({ trending: trendingResponse, filter }));
-
-    const maxPages = Math.min(
-      trendingResponse.total_pages,
-      trending[filter].page + pages
-    );
-
-    for (var i = initialPage + 1; i <= maxPages; i++) {
-      await sleep(1000);
-      trendingResponse = await movieAPI.getTrendingShows(i, filter);
-      dispatch(addMedia({ trending: trendingResponse, filter }));
-    }
-
-    if (!fetchedInitialPages) {
-      setFetchedInitialPages(true);
-    }
+    await dispatch(movieAPI.getTrendingShows({ page: initialPage, filter }));
   };
-
-  const [first, setfirst] = useState(true);
 
   return (
     <ThemedView>
@@ -66,7 +42,6 @@ export default function HomeScreen() {
         </Text>
       ) : (
         <FlashList
-          onScroll={() => setfirst(false)}
           data={[[], ...trending[filter].results]}
           onEndReachedThreshold={0.3}
           estimatedItemSize={716}
@@ -74,7 +49,7 @@ export default function HomeScreen() {
             <View style={styles.marginBottomView}></View>
           )}
           onEndReached={() => {
-            if (fetchedInitialPages && !isSearching) fetchPages(3);
+            if (!isSearching) fetchPages();
           }}
           renderItem={({ item, index }) => {
             if (index === 0)
@@ -87,7 +62,7 @@ export default function HomeScreen() {
                   isCurrentlySearching={(isSearching) => {
                     setIsSearching(isSearching);
                     if (!isSearching) {
-                      fetchPages(3);
+                      fetchPages();
                     }
                   }}
                 />

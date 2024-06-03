@@ -1,5 +1,6 @@
 import { Filter } from "@/components/FiltersMenu";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { getTrendingShows } from "../apis/MovieAPI";
 import { Trending, TrendingState } from "../interfaces/trending";
 import { pushMediaList } from "./utils";
 
@@ -69,6 +70,17 @@ const trendingSlice = createSlice({
       };
       return state;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getTrendingShows.fulfilled, (state, action) => {
+      const filter = action.meta.arg.filter;
+      if (action.payload.page > state[filter].page) {
+        pushMediaList(state, {
+          payload: { trending: action.payload, filter: filter },
+          type: action.type,
+        });
+      }
+    });
   },
 });
 

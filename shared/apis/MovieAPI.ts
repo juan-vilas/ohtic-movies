@@ -1,4 +1,5 @@
 import { Filter } from "@/components/FiltersMenu";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getLocales } from "react-native-localize";
 import { MovieCast } from "../interfaces/casting";
 import { GenresResult } from "../interfaces/genres";
@@ -15,6 +16,11 @@ const options = {
   },
 };
 
+interface TrendingShowsParams {
+  page: number;
+  filter: Filter;
+}
+
 /**
  * Gets the trending shows
  *
@@ -22,17 +28,17 @@ const options = {
  * @param {Filter} filter
  * @return {*}  {Promise<Trending>}
  */
-export const getTrendingShows = async (
-  page: number,
-  filter: Filter
-): Promise<Trending> => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/trending/${filter}/day?page=${page}&language=${localeTag}`,
-    options
-  );
-  const json: Trending = await response.json();
-  return json;
-};
+export const getTrendingShows = createAsyncThunk(
+  "trending/getTrendingShows",
+  async ({ page, filter }: TrendingShowsParams): Promise<Trending> => {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/trending/${filter}/day?page=${page}&language=${localeTag}`,
+      options
+    );
+    const json: Trending = await response.json();
+    return json;
+  }
+);
 
 /**
  * Gets the casting for a show

@@ -16,7 +16,7 @@ const initialState: WatchListState = {
  *
  * @returns {Promise<WatchListState>} A promise that resolves to the retrieved watchlist state.
  */
-export const getStorage = createAsyncThunk<WatchListState>(
+export const getWatchlistStorage = createAsyncThunk<WatchListState>(
   "watchlist/getStorage",
   async () => {
     const value = await AsyncStorage.getItem("watchlist");
@@ -94,7 +94,7 @@ const watchListSlice = createSlice({
 
   extraReducers: (builder) => {
     // Gets watchlist fron AsyncStorage if it exists
-    builder.addCase(getStorage.fulfilled, (state, action) => {
+    builder.addCase(getWatchlistStorage.fulfilled, (state, action) => {
       state = action.payload;
       return state;
     });
